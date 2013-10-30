@@ -8,6 +8,7 @@ using PhotoBook.Models;
 using PhotoBook.DAL;
 using PhotoBook.Web.Models;
 using System.Data;
+using PagedList;
 
 namespace PhotoBook.Web.Controllers
 {
@@ -53,9 +54,10 @@ namespace PhotoBook.Web.Controllers
             return View(model);
         }
 
-        public ActionResult Album(int? id)
+        public ActionResult Photos(int id = 1)
         {
-            return View();
+            User user = unitOfWork.UserRepository.GetByID(id);
+            return View(user);
         }
 
     }

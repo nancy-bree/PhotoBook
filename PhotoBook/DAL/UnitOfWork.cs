@@ -15,6 +15,8 @@ namespace PhotoBook.DAL
         private RatingRepository _ratingRepository;
 
         private TagRepository _tagRepository;
+
+        private UserRepository _userRepository;
         #endregion
 
         #region Properties
@@ -63,6 +65,18 @@ namespace PhotoBook.DAL
                     _tagRepository = new TagRepository(_context);
                 }
                 return _tagRepository;
+            }
+        }
+
+        public UserRepository UserRepository
+        {
+            get
+            {
+                if (_userRepository == null)
+                {
+                    _userRepository = new UserRepository(_context);
+                }
+                return _userRepository;
             }
         }
         #endregion

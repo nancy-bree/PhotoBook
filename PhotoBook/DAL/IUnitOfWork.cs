@@ -11,6 +11,8 @@ namespace PhotoBook.DAL
 
         TagRepository TagRepository { get; }
 
+        UserRepository UserRepository { get; }
+
         void Save();
     }
 }

@@ -10,7 +10,7 @@
           </div>
           <div class="collapse navbar-collapse">
             <ul class="nav navbar-nav">
-              <li>@Html.ActionLink("Albums", "Albums", "PhotoBook")</li>
+              <li>@Html.ActionLink("Photos", "Photos", "PhotoBook", new { id = (int)@Membership.GetUser().ProviderUserKey}, null)</li>
                 <li>@Html.ActionLink("Upload", "Upload", "PhotoBook")</li>
             </ul>
             @*@Html.Partial("~/Views/Shared/_SearchBar.cshtml")*@

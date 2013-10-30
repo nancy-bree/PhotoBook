@@ -5,7 +5,7 @@ using PhotoBook.Models;
 
 namespace PhotoBook.DAL
 {
-    public class RatingRepository : Repository<RatingRepository>
+    public class RatingRepository : Repository<Rating>
     {
         public RatingRepository(PhotoBookContext context) : base(context) { }
     }

@@ -5,7 +5,7 @@ using PhotoBook.Models;
 
 namespace PhotoBook.DAL
 {
-    public class TagRepository : Repository<TagRepository>
+    public class TagRepository : Repository<Tag>
     {
         public TagRepository(PhotoBookContext context) : base(context) { }
     }
