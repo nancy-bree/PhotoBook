@@ -1,0 +1,20 @@
+﻿@model PhotoBook.Models.User
+
+@{
+    ViewBag.Title = "Photos";
+}
+
+<div class="page-header center">
+  <h1>@ViewBag.Title</h1>
+</div>
+
+@foreach (var item in Model.Photos)
+{
+    <div>
+    @Html.DisplayFor(x => item.User.ID)
+    @Html.DisplayFor(x => item.User.UserName)
+    <em>Description: </em>@Html.DisplayFor(x => item.Description)
+    <img src="@Url.Content(String.Concat("~/_uploads/", item.Filename))" alt="photo" />
+        </div>
+}
+
