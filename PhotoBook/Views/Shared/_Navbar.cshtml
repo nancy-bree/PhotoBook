@@ -1,0 +1,40 @@
+﻿<div class="navbar navbar-default navbar-fixed-top">
+        <div class="container">
+          <div class="navbar-header">
+            <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+              <span class="icon-bar"></span>
+              <span class="icon-bar"></span>
+              <span class="icon-bar"></span>
+            </button>
+            @Html.ActionLink("PhotoBook", "Index", "Home", null, new { @class = "navbar-brand"})
+          </div>
+          <div class="collapse navbar-collapse">
+            <ul class="nav navbar-nav">
+              <li>@Html.ActionLink("Albums", "Albums", "PhotoBook")</li>
+                <li>@Html.ActionLink("Upload", "Upload", "PhotoBook")</li>
+            </ul>
+            @*@Html.Partial("~/Views/Shared/_SearchBar.cshtml")*@
+              @*<ul class="nav navbar-nav">
+                <li>@Html.ActionLink("Вход", "LogOn", "Account")</li>
+                 <li>@Html.ActionLink("Регистрация", "Register", "Account")</li>
+            </ul>*@
+              @if (Request.IsAuthenticated)
+              {
+                  <ul class="nav navbar-nav navbar-right">
+                    <li>@Html.ActionLink(User.Identity.Name, "Manage", "Account", routeValues: null, htmlAttributes: null )</li>
+                    <li>@Html.ActionLink("Log off", "LogOff", "Account")
+                        @*@using (Html.BeginForm("LogOff", "Account", FormMethod.Post, new { id = "logoutForm" })) {
+                            @Html.AntiForgeryToken()
+                            <a href="javascript:document.getElementById('logoutForm').submit()">Log off</a>
+                        }*@
+                    </li>
+                </ul>
+              } else {
+                <ul class="nav navbar-nav navbar-right">
+                    <li>@Html.ActionLink("Register", "Register", "Account", routeValues: null, htmlAttributes: new { id = "registerLink" })</li>
+                    <li>@Html.ActionLink("Log in", "Login", "Account", routeValues: null, htmlAttributes: new { id = "loginLink" })</li>
+                </ul>
+            }
+          </div><!--/.nav-collapse -->
+        </div>
+</div>

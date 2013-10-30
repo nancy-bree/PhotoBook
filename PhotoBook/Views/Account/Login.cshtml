@@ -1,0 +1,47 @@
+﻿@model PhotoBook.Web.Models.LoginModel
+
+@{
+    ViewBag.Title = "Log in";
+}
+
+<div class="page-header center">
+  <h1>@ViewBag.Title</h1>
+</div>
+
+<section id="loginForm">
+@using (Html.BeginForm("Login", "Account", FormMethod.Post, new { role = "form", @class = "col-md-6", ReturnUrl = ViewBag.ReturnUrl })) {
+    @Html.AntiForgeryToken()
+    @Html.ValidationSummary(true)
+
+    <div class="form-group">
+        @Html.LabelFor(m => m.UserName)
+        @Html.TextBoxFor(m => m.UserName, new { @class = "form-control"})
+        @Html.ValidationMessageFor(m => m.UserName)
+    </div>
+    <div class="form-group">
+        @Html.LabelFor(m => m.Password)
+        @Html.PasswordFor(m => m.Password, new { @class = "form-control"})
+        @Html.ValidationMessageFor(m => m.Password)
+    </div>
+    <div class="checkbox">
+        @*@Html.CheckBoxFor(m => m.RememberMe)
+        @Html.LabelFor(m => m.RememberMe, new { @class = "checkbox" })*@
+        <label>
+            <input type="checkbox"> Remember Me
+        </label>
+    </div>
+    <input type="submit" value="Log in" class="btn btn-default" />
+    <p>
+        <br />@Html.ActionLink("Register", "Register") if you don't have an account.
+    </p>
+}
+</section>
+
+@*<section class="social" id="socialLoginForm">
+    <h2>Use another service to log in.</h2>
+    @Html.Action("ExternalLoginsList", new { ReturnUrl = ViewBag.ReturnUrl })
+</section>*@
+
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+}
