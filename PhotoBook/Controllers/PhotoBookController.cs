@@ -9,6 +9,7 @@ using PhotoBook.DAL;
 using PhotoBook.Web.Models;
 using System.Data;
 using PagedList;
+using PhotoBook.Properties;
 
 namespace PhotoBook.Web.Controllers
 {
@@ -24,40 +25,11 @@ namespace PhotoBook.Web.Controllers
             return View();
         }
 
-        [Authorize]
-        public ActionResult Upload()
+        public ActionResult Photos(int id = 1, int page = 1)
         {
-            return View();
-        }
-
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public ActionResult Upload(UploadModel model)
-        {
-            try
-            {
-                if (ModelState.IsValid)
-                {
-                    Photo photo = new Photo();
-                    photo.Description = model.Description;
-                    photo.Filename = Services.PhotoUploadService.SavePhoto(model.Photo);
-                    photo.UserID = (int)Membership.GetUser().ProviderUserKey;
-                    unitOfWork.PhotoRepository.Insert(photo);
-                    unitOfWork.Save();
-                    return RedirectToAction("Index", "Home");
-                }
-            }
-            catch (DataException)
-            {
-                ModelState.AddModelError("", "Unable to save changes. Try again, and if the problem persists, see your system administrator.");
-            }
-            return View(model);
-        }
-
-        public ActionResult Photos(int id = 1)
-        {
-            User user = unitOfWork.UserRepository.GetByID(id);
-            return View(user);
+            ViewBag.UserID = id;
+            var photos = unitOfWork.UserRepository.GetByID(id).Photos;
+            return View(photos.ToPagedList(page, Settings.Default.PhotosPerPage));
         }
 
     }

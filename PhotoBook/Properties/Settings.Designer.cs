@@ -31,5 +31,32 @@ namespace PhotoBook.Properties {
                 return ((string)(this["UserUploads"]));
             }
         }
+        
+        [global::System.Configuration.ApplicationScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("9")]
+        public int PhotosPerPage {
+            get {
+                return ((int)(this["PhotosPerPage"]));
+            }
+        }
+        
+        [global::System.Configuration.ApplicationScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("136")]
+        public int ThumbnailHeight {
+            get {
+                return ((int)(this["ThumbnailHeight"]));
+            }
+        }
+        
+        [global::System.Configuration.ApplicationScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("201")]
+        public int ThumbnailWidth {
+            get {
+                return ((int)(this["ThumbnailWidth"]));
+            }
+        }
     }
 }

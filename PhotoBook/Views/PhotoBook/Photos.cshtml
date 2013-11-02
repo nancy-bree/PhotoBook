@@ -1,4 +1,7 @@
-﻿@model PhotoBook.Models.User
+﻿@model PagedList.IPagedList<PhotoBook.Models.Photo>
+@using PagedList.Mvc
+
+<link href="~/Content/PagedList.css" rel="stylesheet" type="text/css" />
 
 @{
     ViewBag.Title = "Photos";
@@ -7,14 +10,74 @@
 <div class="page-header center">
   <h1>@ViewBag.Title</h1>
 </div>
-
-@foreach (var item in Model.Photos)
+@*@foreach (var item in Model)
 {
-    <div>
-    @Html.DisplayFor(x => item.User.ID)
-    @Html.DisplayFor(x => item.User.UserName)
-    <em>Description: </em>@Html.DisplayFor(x => item.Description)
-    <img src="@Url.Content(String.Concat("~/_uploads/", item.Filename))" alt="photo" />
+    <div class="col-md-3 gallery">
+        <div class="menu-gallery">
+            <ul>
+                <li><a href="@Url.Action("Details", "Photo", new { id = item.ID})"><span class="glyphicon glyphicon-search" /></a></li>
+                <li><a href="@Url.Action("Like", "Photo", new { id = item.ID})"><span class="glyphicon glyphicon-thumbs-up" style="color:green;"/> 3</a></li>
+                <li><a href="@Url.Action("Dislike", "Photo", new { id = item.ID})"><span class="glyphicon glyphicon-thumbs-down" style="color:red"; /> 0</a></li>
+            </ul>
         </div>
-}
+        <div class="image-gallery">
+            <img src="@Url.Content(String.Concat("~/_uploads/", "_thumbnail_", item.Filename))" alt="photo" />
+        </div>
+        <div class="tags-gallery">
+            <span class="glyphicon glyphicon-tags" /> Tags: 
+            @if (item.Tags.Count == 0)
+            {
+                <em>none</em>
+            }
+            else
+            {
+                foreach (var tag in item.Tags)
+                {
+                    @Html.ActionLink(tag.Name, "Index", "Tag", new { id = tag.ID}, null);<text> </text>
+                }
+            }
+        </div>
+    </div>
+}*@
 
+<div class="row">
+@{
+    int index = 0;
+    foreach(var item in Model)
+    {
+        if (index % 3 == 0)
+        {
+            @:</div><div class="row">
+        }
+            <div class="col-md-3 gallery">
+        <div class="menu-gallery">
+            <ul>
+                <li><a href="@Url.Action("Details", "Photo", new { id = item.ID})"><span class="glyphicon glyphicon-search" /></a></li>
+                <li><a href="@Url.Action("Like", "Photo", new { id = item.ID})"><span class="glyphicon glyphicon-thumbs-up" style="color:green;"/> 3</a></li>
+                <li><a href="@Url.Action("Dislike", "Photo", new { id = item.ID})"><span class="glyphicon glyphicon-thumbs-down" style="color:red"; /> 0</a></li>
+            </ul>
+        </div>
+        <div class="image-gallery">
+            <img src="@Url.Content(String.Concat("~/_uploads/", "_thumbnail_", item.Filename))" alt="photo" />
+        </div>
+        <div class="tags-gallery">
+            <span class="glyphicon glyphicon-tags" /> Tags: 
+            @if (item.Tags.Count == 0)
+            {
+                <em>none</em>
+            }
+            else
+            {
+                foreach (var tag in item.Tags)
+                {
+                    @Html.ActionLink(tag.Name, "Index", "Tag", new { id = tag.ID}, null);<text> </text>
+                }
+            }
+        </div>
+    </div>
+        index++;
+    }
+}
+</div>
+
+@Html.PagedListPager(Model, page => Url.Action("Photos", new RouteValueDictionary {{"id", ViewBag.UserID}, {"page", page }}), PagedListRenderOptions.PageNumbersOnly)

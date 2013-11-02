@@ -1,0 +1,39 @@
+﻿@model PhotoBook.Models.Photo
+
+@{
+    ViewBag.Title = "Details";
+}
+
+<div style="margin: 0 auto; width:50%;">
+<div class="image-detail">
+    <div class="image-single">
+        <img src="@Url.Content(String.Concat("~/_uploads/", Model.Filename))" alt="photo" class="centered" />
+    </div>
+</div>
+<div>
+    @Html.ActionLink("Edit Photo", "Edit", "PhotoBook", new { id = Model.ID}, null)
+    <br />
+    @Html.ActionLink("Delete Photo", "Delete", "PhotoBook", new { id = Model.ID}, null)
+</div>
+<div class="image-description">
+    <h4>Description</h4>
+    <p>@Html.DisplayFor(x => x.Description)</p>
+</div>
+<div class="image-description">
+    <h4>Tags</h4>
+    @if (Model.Tags.Count > 0)
+    {
+        <p>
+            @foreach (var item in Model.Tags)
+            {
+                <em>@Html.ActionLink(item.Name, "Tag", "Tag", new { id = item.ID}, null) </em>
+            }
+        </p>
+    }
+    else
+    {
+        <p><i>None</i></p>
+    }
+</div>
+    </div>
+

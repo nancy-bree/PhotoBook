@@ -1,0 +1,41 @@
+﻿@model PagedList.IPagedList<PhotoBook.Models.Photo>
+@using PagedList.Mvc
+
+@{
+    ViewBag.Title = "Photos with tag '" + ViewBag.Tag.Name + "'";
+}
+
+<div class="page-header center">
+  <h1>@ViewBag.Title</h1>
+</div>
+@foreach (var item in Model)
+{
+    <div class="col-md-3 gallery">
+        <div class="menu-gallery">
+            <ul>
+                <li><a href="@Url.Action("Details", "Photo", new { id = item.ID})"><span class="glyphicon glyphicon-search" /></a></li>
+                <li><a href="@Url.Action("Like", "Photo", new { id = item.ID})"><span class="glyphicon glyphicon-thumbs-up" style="color:green;"/> 3</a></li>
+                <li><a href="@Url.Action("Dislike", "Photo", new { id = item.ID})"><span class="glyphicon glyphicon-thumbs-down" style="color:red"; /> 0</a></li>
+            </ul>
+        </div>
+        <div class="image-gallery">
+            <img src="@Url.Content(String.Concat("~/_uploads/", "_thumbnail_", item.Filename))" alt="photo" />
+        </div>
+        <div class="tags-gallery">
+            <span class="glyphicon glyphicon-tags" /> Tags: 
+            @if (item.Tags.Count == 0)
+            {
+                <em>none</em>
+            }
+            else
+            {
+                foreach (var tag in item.Tags)
+                {
+                    @Html.ActionLink(tag.Name, "Index", "Tag", new { id = tag.ID}, null);<text> </text>
+                }
+            }
+        </div>
+    </div>
+}
+
+@Html.PagedListPager(Model, page => Url.Action("Index", new RouteValueDictionary {{"id", ViewBag.Tag.ID}, {"page", page }}), PagedListRenderOptions.PageNumbersOnly)

@@ -178,6 +178,8 @@
     <Compile Include="Controllers\AccountController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\PhotoBookController.cs" />
+    <Compile Include="Controllers\PhotoController.cs" />
+    <Compile Include="Controllers\TagController.cs" />
     <Compile Include="DAL\AlbumRepository.cs" />
     <Compile Include="DAL\DataContextInitializer.cs" />
     <Compile Include="DAL\IUnitOfWork.cs" />
@@ -216,8 +218,10 @@
     <Compile Include="Services\Filter.cs" />
     <Compile Include="Services\PhotoEditor.cs" />
     <Compile Include="Services\PhotoUploadService.cs" />
+    <Compile Include="Services\TagService.cs" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="Content\bg.png" />
     <Content Include="Content\bootstrap\bootstrap-theme.css" />
     <Content Include="Content\bootstrap\bootstrap-theme.min.css" />
     <Content Include="Content\bootstrap\bootstrap.css" />
@@ -279,6 +283,7 @@
     <Content Include="Content\themes\base\minified\jquery.ui.slider.min.css" />
     <Content Include="Content\themes\base\minified\jquery.ui.tabs.min.css" />
     <Content Include="Content\themes\base\minified\jquery.ui.theme.min.css" />
+    <Content Include="Content\ui-anim_basic_16x16.gif" />
     <Content Include="favicon.ico" />
     <Content Include="Global.asax" />
     <Content Include="Content\fonts\glyphicons-halflings-regular.woff" />
@@ -291,6 +296,14 @@
     <None Include="Scripts\jquery-1.9.1.intellisense.js" />
     <Content Include="Scripts\bootstrap.js" />
     <Content Include="Scripts\bootstrap.min.js" />
+    <Content Include="Scripts\gallery\ajax-loader_dark.gif" />
+    <Content Include="Scripts\gallery\empty.gif" />
+    <Content Include="Scripts\gallery\fs_img_g_bg.png" />
+    <Content Include="Scripts\gallery\jquery.easing.1.3.js" />
+    <Content Include="Scripts\gallery\nextImgBtn.png" />
+    <Content Include="Scripts\gallery\prevImgBtn.png" />
+    <Content Include="Scripts\gallery\toolbar_fs_icon.png" />
+    <Content Include="Scripts\gallery\toolbar_n_icon.png" />
     <Content Include="Scripts\jquery-1.9.1.js" />
     <Content Include="Scripts\jquery-1.9.1.min.js" />
     <Content Include="Scripts\jquery-1.9.1.min.map" />
@@ -340,8 +353,11 @@
     <Content Include="Views\Account\_ExternalLoginsListPartial.cshtml" />
     <Content Include="Views\Account\_RemoveExternalLoginsPartial.cshtml" />
     <Content Include="Views\Account\_SetPasswordPartial.cshtml" />
-    <Content Include="Views\PhotoBook\Upload.cshtml" />
+    <Content Include="Views\Photo\Upload.cshtml" />
     <Content Include="Views\PhotoBook\Photos.cshtml" />
+    <Content Include="Views\Photo\Details.cshtml" />
+    <Content Include="Views\Tag\Index.cshtml" />
+    <Content Include="Views\Photo\Index.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
