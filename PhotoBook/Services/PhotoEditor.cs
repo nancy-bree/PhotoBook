@@ -6,7 +6,7 @@ namespace PhotoBook.Services
 {
     public static class PhotoEditor
     {
-        public static void ToSepia(string photoPath, int depth)
+        public static Bitmap ToSepia(string photoPath, int depth)
         {
             Bitmap photo = new Bitmap(photoPath);
 
@@ -36,9 +36,10 @@ namespace PhotoBook.Services
                     photo.SetPixel(x, y, Color.FromArgb(A, R, G, B));
                 }
             }
+            return photo;
         }
 
-        public static void ToGrayscale(string photoPath)
+        public static Bitmap ToGrayscale(string photoPath)
         {
             Bitmap photo = new Bitmap(photoPath);
 
@@ -57,9 +58,10 @@ namespace PhotoBook.Services
                     photo.SetPixel(x, y, Color.FromArgb((int)A, (int)R, (int)G, (int)B));
                 }
             }
+            return photo;
         }
 
-        public static void ApplyContrast(string photoPath, double contrast)
+        public static Bitmap ApplyContrast(string photoPath, double contrast)
         {
             Bitmap photo = new Bitmap(photoPath);
 
@@ -123,6 +125,7 @@ namespace PhotoBook.Services
                     photo.SetPixel(x, y, Color.FromArgb((int)A, (int)R, (int)G, (int)B));
                 }
             }
+            return photo;
         }
     }
 }

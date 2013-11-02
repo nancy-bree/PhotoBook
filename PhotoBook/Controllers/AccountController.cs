@@ -8,9 +8,8 @@ using System.Web.Security;
 using DotNetOpenAuth.AspNet;
 using Microsoft.Web.WebPages.OAuth;
 using WebMatrix.WebData;
-using PhotoBook.Web.Models;
-using PhotoBook.DAL;
 using PhotoBook.Models;
+using PhotoBook.DAL;
 
 namespace PhotoBook.Web.Controllers
 {

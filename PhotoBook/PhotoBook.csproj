@@ -204,6 +204,7 @@
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\AccountModels.cs" />
     <Compile Include="Models\Album.cs" />
+    <Compile Include="Models\EditModel.cs" />
     <Compile Include="Models\Photo.cs" />
     <Compile Include="Models\Rating.cs" />
     <Compile Include="Models\Tag.cs" />
@@ -358,6 +359,7 @@
     <Content Include="Views\Photo\Details.cshtml" />
     <Content Include="Views\Tag\Index.cshtml" />
     <Content Include="Views\Photo\Index.cshtml" />
+    <Content Include="Views\Photo\Edit.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

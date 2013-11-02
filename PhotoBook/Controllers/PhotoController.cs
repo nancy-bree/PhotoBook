@@ -6,7 +6,7 @@ using System.Web.Mvc;
 using System.Web.Security;
 using PhotoBook.Models;
 using PhotoBook.DAL;
-using PhotoBook.Web.Models;
+using PhotoBook.Models;
 using System.Data;
 using PagedList;
 using PhotoBook.Services;
@@ -72,6 +72,12 @@ namespace PhotoBook.Controllers
                     photo.Description = model.Description;
                     photo.Filename = Services.PhotoUploadService.SavePhoto(model.Photo);
                     photo.UserID = (int)Membership.GetUser().ProviderUserKey;
+                    List<string> tags = TagService.SplitTags(model.Tags);
+                    photo.Tags = new List<Tag>();
+                    foreach (var tag in tags)
+                    {
+                        photo.Tags.Add(unitOfWork.TagRepository.GetTagByName(tag));
+                    }
                     unitOfWork.PhotoRepository.Insert(photo);
                     unitOfWork.Save();
                     return RedirectToAction("Index", "Home");

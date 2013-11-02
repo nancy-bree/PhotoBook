@@ -6,7 +6,7 @@ using System.Web.Security;
 using System.Web.Mvc;
 using PhotoBook.Models;
 using PhotoBook.DAL;
-using PhotoBook.Web.Models;
+using PhotoBook.Models;
 using System.Data;
 using PagedList;
 using PhotoBook.Properties;
