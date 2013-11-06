@@ -4,7 +4,7 @@ using System.Linq;
 using System.Web;
 using System.Web.Mvc;
 using System.Web.Security;
-using PhotoBook.Models;
+using PhotoBook.Entities;
 using PhotoBook.DAL;
 using System.Data;
 using PagedList;

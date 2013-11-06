@@ -11,14 +11,14 @@ namespace PhotoBook.Services
     {
         public static List<string> SplitTags(string tags)
         {
-            var list = new List<string>(tags.Split(','));
+            var list = new List<string>(tags.Trim().Split(','));
             list.Remove(string.Empty);
             return list;
         }
 
-        public static string GetTagClass(int category, int articles)
+        public static string GetTagClass(int tag, int photos)
         {
-            var result = (category * 100) / articles;
+            var result = (tag * 100) / photos;
             if (result <= 1)
                 return "tag1";
             if (result <= 4)

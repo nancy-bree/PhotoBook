@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Web;
 using System.Web.Mvc;
-using PhotoBook.Models;
+using PhotoBook.Entities;
 using PhotoBook.Properties;
 using PhotoBook.DAL;
 

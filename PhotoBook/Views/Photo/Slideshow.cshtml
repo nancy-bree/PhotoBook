@@ -1,0 +1,37 @@
+﻿@model IEnumerable<PhotoBook.Entities.Photo>
+@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+<html>
+<head>
+    <title></title>
+    <link rel="stylesheet" type="text/css" href="~/Content/gallery.css" />
+    <script type="text/javascript" src="~/Scripts/jquery-1.9.1.min.js"></script>
+    <script type="text/javascript" src="~/Scripts/gallery/jquery.easing.1.3.js"></script>
+</head>
+<body>
+<div id="bg"><a href="#" class="nextImageBtn" title="next"></a><a href="#" class="prevImageBtn" title="previous"></a><img src="@Url.Content(String.Concat("~/_uploads/", ViewBag.FirstPhoto.Filename))" width="1680" height="1050" alt="@ViewBag.FirstPhoto.Description" title="@ViewBag.FirstPhoto.Description" id="bgimg" /></div>
+<div id="preloader"><img src="/Scripts/gallery/ajax-loader_dark.gif" width="32" height="32" /></div>
+<div id="img_title"></div>
+<div id="toolbar"><a href="#" title="Maximize" onClick="ImageViewMode('full');return false"><img src="/Scripts/gallery/toolbar_fs_icon.png" width="50" height="50"  /></a></div>
+<div id="thumbnails_wrapper">
+<div id="outer_container">
+<div class="thumbScroller">
+  <div class="container">
+      @foreach (var item in Model)
+      {
+          string description = " ";
+          if (!String.IsNullOrEmpty(item.Description)) { description = item.Description; }
+      <div class="content">
+          <div><a href="@Url.Content(String.Concat("~/_uploads/", item.Filename))"><img src="@Url.Content(String.Concat("~/_uploads/", "_thumbnail_", item.Filename))" title="@description" alt="@description" class="thumb" /></a></div>
+        </div>
+      }
+  </div>
+</div>
+</div>
+</div>
+<script src="@Url.Content("~/Scripts/gallery/gallery.js")" type="text/javascript"></script>
+</body>
+</html>

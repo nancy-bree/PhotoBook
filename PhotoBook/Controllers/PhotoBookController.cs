@@ -4,12 +4,12 @@ using System.Linq;
 using System.Web;
 using System.Web.Security;
 using System.Web.Mvc;
-using PhotoBook.Models;
+using PhotoBook.Entities;
 using PhotoBook.DAL;
-using PhotoBook.Models;
 using System.Data;
 using PagedList;
 using PhotoBook.Properties;
+using WebMatrix.WebData;
 
 namespace PhotoBook.Web.Controllers
 {
@@ -32,5 +32,52 @@ namespace PhotoBook.Web.Controllers
             return View(photos.ToPagedList(page, Settings.Default.PhotosPerPage));
         }
 
+        [HttpPost]
+        public int AjaxVote(int photoid, string action)
+        {
+            // check if already voted, if found then return
+            //if () {return; }
+            var photo = unitOfWork.PhotoRepository.GetByID(photoid);
+            if (photo.UserID == WebSecurity.CurrentUserId) { return unitOfWork.RatingRepository.GetPhotoRating(photoid); }  // do not allow vote for own photo
+
+
+            var rating = unitOfWork.RatingRepository.GetRatingInfo(photoid, WebSecurity.CurrentUserId);
+            if (rating == null)
+            {
+                rating = new Rating()
+                {
+                    PhotoID = photoid,
+                    UserID = WebSecurity.CurrentUserId
+                };
+                if (action == "up")
+                {
+                    rating.Like = 1;
+                }
+                if (action == "down")
+                {
+                    rating.Dislike = 1;
+                }
+                unitOfWork.RatingRepository.Insert(rating);
+                unitOfWork.Save();
+            }
+            else 
+            {
+                // if clicked the same item then delete vote
+                if ((rating.Like == 1 && action == "up") || (rating.Dislike == 1 && action == "down"))
+                {
+                    unitOfWork.RatingRepository.Delete(rating);
+                    unitOfWork.Save();
+                }
+                else
+                {
+                    if (action == "up") { rating.Like = 1; rating.Dislike = 0; }
+                    if (action == "down") { rating.Dislike = 1; rating.Like = 0; }
+                    unitOfWork.RatingRepository.Update(rating);
+                    unitOfWork.Save();
+                }
+            }    // if already voted
+
+            return unitOfWork.RatingRepository.GetPhotoRating(photoid);
+        }
     }
 }

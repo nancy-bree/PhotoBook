@@ -10,6 +10,10 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".nuget", ".nuget", "{1D350E
 		.nuget\NuGet.targets = .nuget\NuGet.targets
 	EndProjectSection
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PhotoBook.Entities", "PhotoBook.Entities\PhotoBook.Entities.csproj", "{EA9114DF-A0A3-4D05-8CD9-A5E2F878985F}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PhotoBook.DAL", "PhotoBook.DAL\PhotoBook.DAL.csproj", "{46D68778-656B-49E4-9DC0-C30B1F744EC5}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -20,6 +24,14 @@ Global
 		{FE62290B-68AF-46AC-A0CC-9C265E1A7A29}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{FE62290B-68AF-46AC-A0CC-9C265E1A7A29}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{FE62290B-68AF-46AC-A0CC-9C265E1A7A29}.Release|Any CPU.Build.0 = Release|Any CPU
+		{EA9114DF-A0A3-4D05-8CD9-A5E2F878985F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{EA9114DF-A0A3-4D05-8CD9-A5E2F878985F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{EA9114DF-A0A3-4D05-8CD9-A5E2F878985F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{EA9114DF-A0A3-4D05-8CD9-A5E2F878985F}.Release|Any CPU.Build.0 = Release|Any CPU
+		{46D68778-656B-49E4-9DC0-C30B1F744EC5}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{46D68778-656B-49E4-9DC0-C30B1F744EC5}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{46D68778-656B-49E4-9DC0-C30B1F744EC5}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{46D68778-656B-49E4-9DC0-C30B1F744EC5}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

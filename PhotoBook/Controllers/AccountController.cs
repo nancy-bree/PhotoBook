@@ -10,6 +10,7 @@ using Microsoft.Web.WebPages.OAuth;
 using WebMatrix.WebData;
 using PhotoBook.Models;
 using PhotoBook.DAL;
+using PhotoBook.Entities;
 
 namespace PhotoBook.Web.Controllers
 {

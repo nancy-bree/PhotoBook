@@ -8,8 +8,9 @@ namespace PhotoBook.Models
 {
     public class EditModel
     {
-        [Required]
-        public HttpPostedFileBase Photo { get; set; }
+        public int ID { get; set; }
+
+        public string Photo { get; set; }
 
         public string Description { get; set; }
 

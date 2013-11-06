@@ -1,12 +1,16 @@
-﻿@model PhotoBook.Models.Photo
+﻿@model PhotoBook.Models.EditModel
 
 @{
     ViewBag.Title = "Edit Photo";
 }
+
+<link rel="stylesheet" href="@Url.Content("~/Content/themes/base/jquery-ui.css")" />
+<script src="@Url.Content("~/Scripts/jquery-ui-1.10.3.min.js")"></script>
+
 <div class="col-md-6">
     <div class="image-detail">
         <div class="image-single">
-            <img src="@Url.Content(String.Concat("~/_uploads/", Model.Filename))" alt="photo" class="centered" />
+            <img src="@Url.Content(String.Concat("~/_uploads/", Model.Photo))" alt="photo" class="centered" />
         </div>
     </div>
 </div>
@@ -15,46 +19,91 @@
     @Html.ValidationSummary(true)
     @Html.AntiForgeryToken()
 
+    @Html.HiddenFor(model => model.ID)
+
+    <div class="form-group">
+        @Html.LabelFor(model => model.Description)
+        @Html.TextAreaFor(model => model.Description, new { @class = "form-control"})
+        @Html.ValidationMessageFor(model => model.Description)
+    </div>
+
+    <div class="form-group">
+        @Html.LabelFor(model => model.Tags)
+        @Html.TextBoxFor(model => model.Tags, new { @class = "form-control"})
+        @Html.ValidationMessageFor(model => model.Tags)
+    </div>
+    
     <fieldset>
-        <legend>Photo</legend>
-
-        @Html.HiddenFor(model => model.ID)
-
-        <div class="editor-label">
-            @Html.LabelFor(model => model.Filename)
+        <legend>Filters</legend>
+        <div class="radio">
+          <label>
+            <input type="radio" name="filters" id="autocontrast" value="autocontrast">
+            Autocontrast
+          </label>
         </div>
-        <div class="editor-field">
-            @Html.EditorFor(model => model.Filename)
-            @Html.ValidationMessageFor(model => model.Filename)
+        <div class="radio">
+          <label>
+            <input type="radio" name="filters" id="monochrome" value="monochrome">
+            Monochrome
+          </label>
         </div>
-
-        <div class="editor-label">
-            @Html.LabelFor(model => model.Description)
+        <div class="radio">
+          <label>
+            <input type="radio" name="filters" id="sepia" value="sepia">
+            Sepia
+          </label>
         </div>
-        <div class="editor-field">
-            @Html.EditorFor(model => model.Description)
-            @Html.ValidationMessageFor(model => model.Description)
-        </div>
-
-        <div class="editor-label">
-            @Html.LabelFor(model => model.UserID)
-        </div>
-        <div class="editor-field">
-            @Html.EditorFor(model => model.UserID)
-            @Html.ValidationMessageFor(model => model.UserID)
-        </div>
-
-        <div class="editor-label">
-            @Html.LabelFor(model => model.Tags)
-        </div>
-        <div class="editor-field">
-            @Html.EditorFor(model => model.Tags)
-            @Html.ValidationMessageFor(model => model.Tags)
-        </div>
-
-        <p>
-            <input type="submit" value="Save" />
-        </p>
     </fieldset>
+
+    <input type="submit" value="Save" class="btn btn-default" />
 }
 </div>
+
+<script>
+    $(function () {
+        function split(val) {
+            return val.split(/,\s*/);
+        }
+        function extractLast(term) {
+            return split(term).pop();
+        }
+
+        $("#Tags")
+          // don't navigate away from the field on tab when selecting an item
+          .bind("keydown", function (event) {
+              if (event.keyCode === $.ui.keyCode.TAB &&
+                  $(this).data("ui-autocomplete").menu.active) {
+                  event.preventDefault();
+              }
+          })
+          .autocomplete({
+              source: function (request, response) {
+                  $.getJSON("/Tag/GetTags", {
+                      term: extractLast(request.term)
+                  }, response);
+              },
+              search: function () {
+                  // custom minLength
+                  var term = extractLast(this.value);
+                  if (term.length < 2) {
+                      return false;
+                  }
+              },
+              focus: function () {
+                  // prevent value inserted on focus
+                  return false;
+              },
+              select: function (event, ui) {
+                  var terms = split(this.value);
+                  // remove the current input
+                  terms.pop();
+                  // add the selected item
+                  terms.push(ui.item.value);
+                  // add placeholder to get the comma-and-space at the end
+                  terms.push("");
+                  this.value = terms.join(",");
+                  return false;
+              }
+          });
+    });
+  </script>

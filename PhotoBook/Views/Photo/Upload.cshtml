@@ -1,12 +1,11 @@
-﻿@model PhotoBook.Web.Models.UploadModel
+﻿@model PhotoBook.Models.UploadModel
 
 @{
     ViewBag.Title = "Upload";
 }
 
-  <link rel="stylesheet" href="http://code.jquery.com/ui/1.10.3/themes/smoothness/jquery-ui.css" />
-  <script src="@Url.Content("~/Scripts/jquery-1.9.1.js")"></script>
-  <script src="http://code.jquery.com/ui/1.10.3/jquery-ui.js"></script>
+<link rel="stylesheet" href="@Url.Content("~/Content/themes/base/jquery-ui.css")" />
+<script src="@Url.Content("~/Scripts/jquery-ui-1.10.3.min.js")"></script>
 
 <div class="page-header center">
   <h1>Upload</h1>
@@ -20,7 +19,7 @@
     <div class="form-group">
         @Html.LabelFor(m => m.Photo)
         <input type="file" name="Photo" id="Photo" class="form-control" accept="image/jpeg" /> 
-        @Html.ValidationMessageFor(m => m.Photo) 
+        @Html.ValidationMessageFor(m => m.Photo)
     </div>
     
     <div class="form-group">
@@ -31,7 +30,6 @@
     <div class="form-group">
         @Html.LabelFor(m => m.Tags)
         @Html.TextBoxFor(m => m.Tags, new { @class = "form-control"})
-        <em>Cannot find a suitable tag? @Html.ActionLink("Add new.", "Create", "Tag")</em>
     </div>
 
     <input type="submit" value="Upload" class="btn btn-default" /> 
@@ -79,7 +77,7 @@
                   terms.push(ui.item.value);
                   // add placeholder to get the comma-and-space at the end
                   terms.push("");
-                  this.value = terms.join(",");
+                  this.value = terms.join(", ");
                   return false;
               }
           });

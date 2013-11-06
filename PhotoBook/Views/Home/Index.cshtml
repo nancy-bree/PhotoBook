@@ -28,12 +28,12 @@
     </li>
 </ol>
 
-<div id="tags">
-    @foreach (var t in (IEnumerable<PhotoBook.Models.Tag>) ViewData["TagCloud"] )
+<div id="tags" style="max-width: 200px;">
+    @foreach (var t in (IEnumerable<PhotoBook.Entities.Tag>) ViewData["TagCloud"] )
     {
-        int count = 0;
+        int count = 1;
         if (t.Photos == null) { count = 1; }
-        @Html.ActionLink(t.Name, "Index", "Tag", new { id = t.ID }, new { @class = PhotoBook.Services.TagService.GetTagClass(count,t.ID)})
+        @Html.ActionLink(t.Name, "Index", "Tag", new { id = t.ID }, new { @class = PhotoBook.Services.TagService.GetTagClass(count, t.ID)})
         @:&nbsp;
     }
 </div>

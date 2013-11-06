@@ -1,83 +1,128 @@
-﻿@model PagedList.IPagedList<PhotoBook.Models.Photo>
+﻿@model PagedList.IPagedList<PhotoBook.Entities.Photo>
 @using PagedList.Mvc
 
 <link href="~/Content/PagedList.css" rel="stylesheet" type="text/css" />
-
 @{
     ViewBag.Title = "Photos";
 }
 
+@{ PhotoBook.DAL.UnitOfWork unitOfWork = new PhotoBook.DAL.UnitOfWork(); }
 <div class="page-header center">
-  <h1>@ViewBag.Title</h1>
+  <h1>@ViewBag.Title&nbsp;<small>@Html.ActionLink("View slideshow", "Slideshow", "Photo", new { id = ViewBag.UserID }, null)</small></h1>
 </div>
-@*@foreach (var item in Model)
-{
-    <div class="col-md-3 gallery">
-        <div class="menu-gallery">
-            <ul>
-                <li><a href="@Url.Action("Details", "Photo", new { id = item.ID})"><span class="glyphicon glyphicon-search" /></a></li>
-                <li><a href="@Url.Action("Like", "Photo", new { id = item.ID})"><span class="glyphicon glyphicon-thumbs-up" style="color:green;"/> 3</a></li>
-                <li><a href="@Url.Action("Dislike", "Photo", new { id = item.ID})"><span class="glyphicon glyphicon-thumbs-down" style="color:red"; /> 0</a></li>
-            </ul>
-        </div>
-        <div class="image-gallery">
-            <img src="@Url.Content(String.Concat("~/_uploads/", "_thumbnail_", item.Filename))" alt="photo" />
-        </div>
-        <div class="tags-gallery">
-            <span class="glyphicon glyphicon-tags" /> Tags: 
-            @if (item.Tags.Count == 0)
-            {
-                <em>none</em>
-            }
-            else
-            {
-                foreach (var tag in item.Tags)
-                {
-                    @Html.ActionLink(tag.Name, "Index", "Tag", new { id = tag.ID}, null);<text> </text>
-                }
-            }
-        </div>
-    </div>
-}*@
 
 <div class="row">
 @{
     int index = 0;
     foreach(var item in Model)
     {
+        int rating = unitOfWork.RatingRepository.GetPhotoRating(item.ID);
+        //PhotoBook.Entities.Rating ratingInfo = unitOfWork.RatingRepository.GetRatingInfo(item.ID, WebSecurity.CurrentUserId);
+        //int vote;
+        //string color1 = null, color2 = null;
+        //if (ratingInfo == null)
+        //{
+        //    vote = 0;
+        //}
+        //else { if (ratingInfo.Like == 0) { vote = ratingInfo.Dislike; } else { vote = ratingInfo.Like; } };
+        //if ((vote == 1) && (ratingInfo.UserID == WebSecurity.CurrentUserId)) { color1 = "color: green;"; }
+        //if ((vote == -1) && (ratingInfo.UserID == WebSecurity.CurrentUserId)) { color2 = "color: red;"; }
         if (index % 3 == 0)
         {
-            @:</div><div class="row">
+            @:</div><div class="row" data-loggeduser ="@WebSecurity.CurrentUserId">
         }
             <div class="col-md-3 gallery">
-        <div class="menu-gallery">
-            <ul>
-                <li><a href="@Url.Action("Details", "Photo", new { id = item.ID})"><span class="glyphicon glyphicon-search" /></a></li>
-                <li><a href="@Url.Action("Like", "Photo", new { id = item.ID})"><span class="glyphicon glyphicon-thumbs-up" style="color:green;"/> 3</a></li>
-                <li><a href="@Url.Action("Dislike", "Photo", new { id = item.ID})"><span class="glyphicon glyphicon-thumbs-down" style="color:red"; /> 0</a></li>
-            </ul>
-        </div>
-        <div class="image-gallery">
-            <img src="@Url.Content(String.Concat("~/_uploads/", "_thumbnail_", item.Filename))" alt="photo" />
-        </div>
-        <div class="tags-gallery">
-            <span class="glyphicon glyphicon-tags" /> Tags: 
-            @if (item.Tags.Count == 0)
-            {
-                <em>none</em>
-            }
-            else
-            {
-                foreach (var tag in item.Tags)
+                @if ((User.Identity.IsAuthenticated) && (item.UserID != WebSecurity.CurrentUserId))
                 {
-                    @Html.ActionLink(tag.Name, "Index", "Tag", new { id = tag.ID}, null);<text> </text>
+                    <div class="menu-gallery" data-photoid="@item.ID" data-score="@rating" data-userid="@item.UserID" >
+                        <div class="vote-span"><!-- voting-->
+                            <div class="vote" data-action="up" title="Vote up" @*style="@color1"*@ >
+                                <span class="glyphicon glyphicon-arrow-up"/>
+                            </div><!--vote up-->
+                            <div class="vote-score">@rating</div>
+                            <div class="vote" data-action="down" title="Vote down" @*style="@color2"*@>
+                                <span class="glyphicon glyphicon-arrow-down"/>
+                            </div><!--vote down-->
+                      </div>
+                </div>
                 }
-            }
-        </div>
-    </div>
+                <div class="image-gallery">
+                    <a href="@Url.Action("Details", "Photo", new { id = item.ID})"><img src="@Url.Content(String.Concat("~/_uploads/", "_thumbnail_", item.Filename))" alt="@item.Description" /></a>
+                </div>
+                <div class="tags-gallery">
+                    <span class="glyphicon glyphicon-tags" /> Tags: 
+                    @if (item.Tags.Count == 0)
+                    {
+                        <em>none</em>
+                    }
+                    else
+                    {
+                        <em>@Html.Raw(String.Join(", ", item.Tags.Select(tag => @Html.ActionLink(tag.Name, "Index", "Tag", new { id = tag.ID}, null).ToHtmlString()).ToArray()))</em>
+                    }
+                </div>
+            </div>
         index++;
     }
 }
 </div>
 
 @Html.PagedListPager(Model, page => Url.Action("Photos", new RouteValueDictionary {{"id", ViewBag.UserID}, {"page", page }}), PagedListRenderOptions.PageNumbersOnly)
+<script>
+$(document).ready(function(){
+  // ajax setup
+  $.ajaxSetup({
+    url: '/PhotoBook/AjaxVote',
+    type: 'POST',
+    cache: 'false'
+  });
+
+  // any voting button (up/down) clicked event
+  $('.vote').click(function(){
+    var self = $(this); // cache $this
+    var action = self.data('action'); // grab action data up/down 
+    var parent = self.parent().parent(); // grab grand parent .item
+    var photoid = parent.data('photoid'); // grab photo id from data-photoid
+    var score = parent.data('score'); // grab score form data-score
+    var userid = parent.data('userid'); // grab user id from data-userid
+    var loggeduser = parent.parent().parent().data('loggeduser'); // logged user id div class row
+
+    // only works where is no disabled class
+    if (!parent.hasClass('disabled') && (loggeduser != userid)) {
+      // vote up action
+        if (action == 'up') {
+            // if 'down' btn is already pressed
+            if ((self.attr('style') !== '')) {
+                self.removeAttr('style');
+            }
+        // increase vote score and color to orange
+          parent.find('.vote-score')/*.html(++score)*/.css({ 'color': 'green' });
+        // change vote up button color to orange
+        self.css({'color':'green'});
+        // send ajax request with post id & action
+        $.ajax({
+            data: { 'photoid': photoid, 'action': 'up' },
+            success: function (result) { parent.find('.vote-score').html(result); }
+        });
+      }
+      // voting down action
+        else if (action == 'down') {
+            if ((self.attr('style') !== '')) {
+                self.removeAttr('style');
+            }
+        // decrease vote score and color to red
+        parent.find('.vote-score')/*.html(--score)*/.css({'color':'red'});
+        // change vote up button color to red
+        self.css({'color':'red'});
+        // send ajax request
+        $.ajax({
+            data: { 'photoid': photoid, 'action': 'down' },
+            success: function (result) { parent.find('.vote-score').html(result);}
+        });
+      };
+
+      // add disabled class with .item
+      //parent.addClass('disabled');
+    };
+  });
+});
+</script>

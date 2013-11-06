@@ -1,4 +1,4 @@
-﻿@model PhotoBook.Web.Models.LoginModel
+﻿@model PhotoBook.Models.LoginModel
 
 @{
     ViewBag.Title = "Log in";
@@ -9,7 +9,8 @@
 </div>
 
 <section id="loginForm">
-@using (Html.BeginForm("Login", "Account", FormMethod.Post, new { role = "form", @class = "col-md-6", ReturnUrl = ViewBag.ReturnUrl })) {
+@using (Html.BeginForm("Login", "Account", new { ReturnUrl = ViewBag.ReturnUrl }, FormMethod.Post, new { role = "form", @class = "col-md-6" }))
+{
     @Html.AntiForgeryToken()
     @Html.ValidationSummary(true)
 

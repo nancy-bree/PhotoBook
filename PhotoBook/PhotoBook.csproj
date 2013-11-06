@@ -180,45 +180,24 @@
     <Compile Include="Controllers\PhotoBookController.cs" />
     <Compile Include="Controllers\PhotoController.cs" />
     <Compile Include="Controllers\TagController.cs" />
-    <Compile Include="DAL\AlbumRepository.cs" />
-    <Compile Include="DAL\DataContextInitializer.cs" />
-    <Compile Include="DAL\IUnitOfWork.cs" />
-    <Compile Include="DAL\PhotoBookContext.cs" />
-    <Compile Include="DAL\PhotoRepository.cs" />
-    <Compile Include="DAL\RatingRepository.cs" />
-    <Compile Include="DAL\Repository.cs" />
-    <Compile Include="DAL\TagRepository.cs" />
-    <Compile Include="DAL\UnitOfWork.cs" />
-    <Compile Include="DAL\UserRepository.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
-    <Compile Include="Migrations\201310300739471_InitialCreate.cs" />
-    <Compile Include="Migrations\201310300739471_InitialCreate.Designer.cs">
-      <DependentUpon>201310300739471_InitialCreate.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Migrations\201310300748087_ChangeUserTableName.cs" />
-    <Compile Include="Migrations\201310300748087_ChangeUserTableName.Designer.cs">
-      <DependentUpon>201310300748087_ChangeUserTableName.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\AccountModels.cs" />
-    <Compile Include="Models\Album.cs" />
     <Compile Include="Models\EditModel.cs" />
-    <Compile Include="Models\Photo.cs" />
-    <Compile Include="Models\Rating.cs" />
-    <Compile Include="Models\Tag.cs" />
+    <Compile Include="Models\PhotoViewModel.cs" />
     <Compile Include="Models\UploadModel.cs" />
-    <Compile Include="Models\User.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Properties\Settings.Designer.cs">
       <AutoGen>True</AutoGen>
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
       <DependentUpon>Settings.settings</DependentUpon>
     </Compile>
+    <Compile Include="Services\FileSizeAttribute.cs" />
+    <Compile Include="Services\FileTypesAttribute.cs" />
     <Compile Include="Services\Filter.cs" />
     <Compile Include="Services\PhotoEditor.cs" />
-    <Compile Include="Services\PhotoUploadService.cs" />
+    <Compile Include="Services\PhotoService.cs" />
     <Compile Include="Services\TagService.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -228,8 +207,10 @@
     <Content Include="Content\bootstrap\bootstrap.css" />
     <Content Include="Content\bootstrap\bootstrap.min.css" />
     <Content Include="Content\fonts\glyphicons-halflings-regular.svg" />
+    <Content Include="Content\gallery.css" />
     <Content Include="Content\PagedList.css" />
     <Content Include="Content\styles.css" />
+    <Content Include="Content\themes\base\images\animated-overlay.gif" />
     <Content Include="Content\themes\base\images\ui-bg_flat_0_aaaaaa_40x100.png" />
     <Content Include="Content\themes\base\images\ui-bg_flat_75_ffffff_40x100.png" />
     <Content Include="Content\themes\base\images\ui-bg_glass_55_fbf9ee_1x400.png" />
@@ -252,12 +233,16 @@
     <Content Include="Content\themes\base\jquery.ui.core.css" />
     <Content Include="Content\themes\base\jquery.ui.datepicker.css" />
     <Content Include="Content\themes\base\jquery.ui.dialog.css" />
+    <Content Include="Content\themes\base\jquery.ui.menu.css" />
     <Content Include="Content\themes\base\jquery.ui.progressbar.css" />
     <Content Include="Content\themes\base\jquery.ui.resizable.css" />
     <Content Include="Content\themes\base\jquery.ui.selectable.css" />
     <Content Include="Content\themes\base\jquery.ui.slider.css" />
+    <Content Include="Content\themes\base\jquery.ui.spinner.css" />
     <Content Include="Content\themes\base\jquery.ui.tabs.css" />
     <Content Include="Content\themes\base\jquery.ui.theme.css" />
+    <Content Include="Content\themes\base\jquery.ui.tooltip.css" />
+    <Content Include="Content\themes\base\minified\images\animated-overlay.gif" />
     <Content Include="Content\themes\base\minified\images\ui-bg_flat_0_aaaaaa_40x100.png" />
     <Content Include="Content\themes\base\minified\images\ui-bg_flat_75_ffffff_40x100.png" />
     <Content Include="Content\themes\base\minified\images\ui-bg_glass_55_fbf9ee_1x400.png" />
@@ -278,12 +263,15 @@
     <Content Include="Content\themes\base\minified\jquery.ui.core.min.css" />
     <Content Include="Content\themes\base\minified\jquery.ui.datepicker.min.css" />
     <Content Include="Content\themes\base\minified\jquery.ui.dialog.min.css" />
+    <Content Include="Content\themes\base\minified\jquery.ui.menu.min.css" />
     <Content Include="Content\themes\base\minified\jquery.ui.progressbar.min.css" />
     <Content Include="Content\themes\base\minified\jquery.ui.resizable.min.css" />
     <Content Include="Content\themes\base\minified\jquery.ui.selectable.min.css" />
     <Content Include="Content\themes\base\minified\jquery.ui.slider.min.css" />
+    <Content Include="Content\themes\base\minified\jquery.ui.spinner.min.css" />
     <Content Include="Content\themes\base\minified\jquery.ui.tabs.min.css" />
     <Content Include="Content\themes\base\minified\jquery.ui.theme.min.css" />
+    <Content Include="Content\themes\base\minified\jquery.ui.tooltip.min.css" />
     <Content Include="Content\ui-anim_basic_16x16.gif" />
     <Content Include="favicon.ico" />
     <Content Include="Global.asax" />
@@ -300,6 +288,7 @@
     <Content Include="Scripts\gallery\ajax-loader_dark.gif" />
     <Content Include="Scripts\gallery\empty.gif" />
     <Content Include="Scripts\gallery\fs_img_g_bg.png" />
+    <Content Include="Scripts\gallery\gallery.js" />
     <Content Include="Scripts\gallery\jquery.easing.1.3.js" />
     <Content Include="Scripts\gallery\nextImgBtn.png" />
     <Content Include="Scripts\gallery\prevImgBtn.png" />
@@ -309,8 +298,8 @@
     <Content Include="Scripts\jquery-1.9.1.min.js" />
     <Content Include="Scripts\jquery-1.9.1.min.map" />
     <None Include="Scripts\jquery.validate-vsdoc.js" />
-    <Content Include="Scripts\jquery-ui-1.8.20.js" />
-    <Content Include="Scripts\jquery-ui-1.8.20.min.js" />
+    <Content Include="Scripts\jquery-ui-1.10.3.js" />
+    <Content Include="Scripts\jquery-ui-1.10.3.min.js" />
     <Content Include="Scripts\jquery.unobtrusive-ajax.js" />
     <Content Include="Scripts\jquery.unobtrusive-ajax.min.js" />
     <Content Include="Scripts\jquery.validate.js" />
@@ -358,7 +347,7 @@
     <Content Include="Views\PhotoBook\Photos.cshtml" />
     <Content Include="Views\Photo\Details.cshtml" />
     <Content Include="Views\Tag\Index.cshtml" />
-    <Content Include="Views\Photo\Index.cshtml" />
+    <Content Include="Views\Photo\Slideshow.cshtml" />
     <Content Include="Views\Photo\Edit.cshtml" />
   </ItemGroup>
   <ItemGroup>
@@ -368,12 +357,14 @@
     <Content Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="Migrations\201310300739471_InitialCreate.resx">
-      <DependentUpon>201310300739471_InitialCreate.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\201310300748087_ChangeUserTableName.resx">
-      <DependentUpon>201310300748087_ChangeUserTableName.cs</DependentUpon>
-    </EmbeddedResource>
+    <ProjectReference Include="..\PhotoBook.DAL\PhotoBook.DAL.csproj">
+      <Project>{46d68778-656b-49e4-9dc0-c30b1f744ec5}</Project>
+      <Name>PhotoBook.DAL</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\PhotoBook.Entities\PhotoBook.Entities.csproj">
+      <Project>{ea9114df-a0a3-4d05-8cd9-a5e2f878985f}</Project>
+      <Name>PhotoBook.Entities</Name>
+    </ProjectReference>
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
