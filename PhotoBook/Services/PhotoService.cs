@@ -8,49 +8,15 @@ namespace PhotoBook.Services
 {
     public static class PhotoService
     {
-        private static void SaveThumbnail(HttpPostedFileBase file, string name)
-        {
-            string thumbnailFilename = "_thumbnail_" + name + Path.GetExtension(file.FileName);
-            string thumbnailPath = GetPhotoPath(thumbnailFilename);
-
-            WebImage img = new WebImage(file.InputStream);
-            float aspectRatio = (float)img.Width / (float)img.Height;
-            int thumbnailHeight = Convert.ToInt32(Settings.Default.ThumbnailWidth / aspectRatio);
-            img.Resize(Settings.Default.ThumbnailWidth, thumbnailHeight).Crop(1, 1);
-            img.Save(thumbnailPath);
-        }
-
         public static string SavePhoto(HttpPostedFileBase file)
         {
             string mainName = Guid.NewGuid().ToString();
             string filename = mainName + Path.GetExtension(file.FileName);
             string path = GetPhotoPath(filename);
+
             file.SaveAs(path);
             SaveThumbnail(file, mainName);
-            /*SaveSepia(path, mainName);
-            SaveGrayscale(path, mainName);
-            SaveContrast(path, mainName);*/
             return filename;
-        }
-
-        private static void SaveSepia(string path, string newPath)
-        {
-            PhotoEditor.ToSepia(path, 20).Save(newPath, System.Drawing.Imaging.ImageFormat.Jpeg);
-        }
-
-        private static void SaveGrayscale(string path, string newPath)
-        {
-            PhotoEditor.ToGrayscale(path).Save(newPath, System.Drawing.Imaging.ImageFormat.Jpeg);
-        }
-
-        private static void SaveContrast(string path, string newPath)
-        {
-            PhotoEditor.ApplyContrast(path, 20).Save(newPath, System.Drawing.Imaging.ImageFormat.Jpeg);
-        }
-
-        private static string GetPhotoPath(string filename)
-        {
-            return Path.Combine(HttpContext.Current.Server.MapPath(PhotoBook.Properties.Settings.Default.UserUploads), filename);
         }
 
         public static void ApplyEffect(Effect effect, string filename)
@@ -69,31 +35,79 @@ namespace PhotoBook.Services
             {
                 case Effect.Autocontrast:
                     {
-                        SaveContrast(tmpPath, sourcePath);
+                        ApplyAutocontrast(tmpPath, sourcePath);
                         break;
                     }
-                case Effect.Monochrome:
+                case Effect.Grayscale:
                     {
-                        SaveGrayscale(tmpPath, sourcePath);
+                        ApplyGrayscale(tmpPath, sourcePath);
                         break;
                     }
                 case Effect.Sepia:
                     {
-                        SaveSepia(tmpPath, sourcePath);
+                        ApplySepia(tmpPath, sourcePath);
+                        break;
+                    }
+                case Effect.None:
+                    {
+                        DeleteEffect(filename);
                         break;
                     }
             }
         }
 
-        public static void DeleteEffect(string filename)
+        private static void SaveThumbnail(HttpPostedFileBase file, string name)
+        {
+            string thumbnailFilename = "_thumbnail_" + name + Path.GetExtension(file.FileName);
+            string thumbnailPath = GetPhotoPath(thumbnailFilename);
+
+            WebImage img = new WebImage(file.InputStream);
+            float aspectRatio = (float)img.Width / (float)img.Height;
+            int thumbnailHeight = Convert.ToInt32(Settings.Default.ThumbnailWidth / aspectRatio);
+            img.Resize(Settings.Default.ThumbnailWidth, thumbnailHeight).Crop(1, 1);
+            img.Save(thumbnailPath);
+        }
+
+        private static void ApplySepia(string path, string newPath)
+        {
+            var photo = PhotoEditor.ToSepia(path, 20);
+            photo.Save(newPath, System.Drawing.Imaging.ImageFormat.Jpeg);
+            photo.Dispose();
+        }
+
+        private static void ApplyGrayscale(string path, string newPath)
+        {
+            var photo = PhotoEditor.ToGrayscale(path);
+            photo.Save(newPath, System.Drawing.Imaging.ImageFormat.Jpeg);
+            photo.Dispose();
+        }
+
+        private static void ApplyAutocontrast(string path, string newPath)
+        {
+            var photo = PhotoEditor.ApplyContrast(path, 20);
+            photo.Save(newPath, System.Drawing.Imaging.ImageFormat.Jpeg);
+            photo.Dispose();
+        }
+
+        private static string GetPhotoPath(string filename)
+        {
+            return Path.Combine(HttpContext.Current.Server.MapPath(PhotoBook.Properties.Settings.Default.UserUploads), filename);
+        }
+
+        private static int DeleteEffect(string filename)
         {
             string tmpFilename = "_tmp_" + filename;
             string tmpPath = GetPhotoPath(tmpFilename);
             string sourcePath = GetPhotoPath(filename);
 
-            File.Delete(sourcePath);
-            File.Move(tmpPath, sourcePath);
-            File.Delete(tmpPath);
+            if (File.Exists(tmpPath))
+            {
+                //File.Delete(sourcePath);
+                File.Move(tmpPath, sourcePath);
+                File.Delete(tmpPath);
+                return 1;
+            }
+            return 0;
         }
     }
 }

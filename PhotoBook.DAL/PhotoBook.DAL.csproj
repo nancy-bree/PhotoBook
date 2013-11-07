@@ -63,6 +63,10 @@
     <Compile Include="Migrations\201311071105383_NewHasEffectColumn.Designer.cs">
       <DependentUpon>201311071105383_NewHasEffectColumn.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201311072001348_EffectColumnAdded.cs" />
+    <Compile Include="Migrations\201311072001348_EffectColumnAdded.Designer.cs">
+      <DependentUpon>201311072001348_EffectColumnAdded.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="PhotoBookContext.cs" />
     <Compile Include="PhotoRepository.cs" />
@@ -92,6 +96,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201311071105383_NewHasEffectColumn.resx">
       <DependentUpon>201311071105383_NewHasEffectColumn.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201311072001348_EffectColumnAdded.resx">
+      <DependentUpon>201311072001348_EffectColumnAdded.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

@@ -15,11 +15,10 @@ using WebMatrix.WebData;
 
 namespace PhotoBook.Controllers
 {
+    [HandleError]
     public class PhotoController : Controller
     {
         private IUnitOfWork unitOfWork = new UnitOfWork();
-        //
-        // GET: /Photo/
 
         public ActionResult Slideshow(string type, int id = 1)
         {
@@ -72,7 +71,7 @@ namespace PhotoBook.Controllers
                     }
                     unitOfWork.PhotoRepository.Insert(photo);
                     unitOfWork.Save();
-                    return RedirectToAction("Index", "Home");
+                    return RedirectToAction("Photos", "PhotoBook", new { id = WebSecurity.CurrentUserId});
                 }
             }
             catch (DataException)
@@ -92,19 +91,27 @@ namespace PhotoBook.Controllers
         public ActionResult Edit(int id)
         {
             var photo = unitOfWork.PhotoRepository.GetByID(id);
-            List<string> tags = new List<string>();
-            var model = new EditModel()
+            if (photo.UserID == WebSecurity.CurrentUserId)
             {
-                ID = photo.ID,
-                Description = photo.Description,
-                Photo = photo.Filename,
-            };
-            foreach (var item in photo.Tags)
-            {
-                tags.Add(item.Name);
+                List<string> tags = new List<string>();
+                var model = new EditModel()
+                {
+                    ID = photo.ID,
+                    Description = photo.Description,
+                    Photo = photo.Filename,
+                    Effect = (Effect)photo.Effect
+                };
+                foreach (var item in photo.Tags)
+                {
+                    tags.Add(item.Name);
+                }
+                model.Tags = String.Join(", ", tags);
+                return View(model);
             }
-            model.Tags = String.Join(", ", tags);
-            return View(model);
+            else
+            {
+                return RedirectToAction("Http403", "Error");
+            }
         }
 
         [HttpPost]
@@ -115,31 +122,26 @@ namespace PhotoBook.Controllers
             {
                 if (ModelState.IsValid)
                 {
-                    if (model.Effect != null)
+                    var user = unitOfWork.UserRepository.GetByID(WebSecurity.CurrentUserId);
+                    Photo photo = new Photo()
                     {
-                        PhotoService.ApplyEffect(model.Effect, model.Photo);
+                        ID = model.ID,
+                        Description = model.Description,
+                        Filename = model.Photo,
+                        UserID = WebSecurity.CurrentUserId,
+                        User = user,
+                        Effect = (int)model.Effect
+                    };
+                    PhotoService.ApplyEffect(model.Effect, model.Photo);
+                    IEnumerable<string> tags = TagService.SplitTags(model.Tags).Distinct();
+                    photo.Tags = new List<Tag>();
+                    foreach (var tag in tags)
+                    {
+                        photo.Tags.Add(unitOfWork.TagRepository.GetTagByName(tag));
                     }
-                    //var user = unitOfWork.UserRepository.GetByID(WebSecurity.CurrentUserId);
-                    //Photo photo = new Photo()
-                    //{
-                    //    ID = model.ID,
-                    //    Description = model.Description,
-                    //    Filename = model.Photo,
-                    //    UserID = WebSecurity.CurrentUserId,
-                    //    User = user
-                    //};
-                    //IEnumerable<string> tags = TagService.SplitTags(model.Tags).Distinct();
-                    //photo.Tags = new List<Tag>();
-                    //foreach (var tag in tags)
-                    //{
-                    //    photo.Tags.Add(unitOfWork.TagRepository.GetTagByName(tag));
-                    //}
-                    ////photo.Description = model.Description;
-                    ////photo.Filename = Services.PhotoUploadService.SavePhoto(model.Photo);
-                    ////photo.UserID = (int)Membership.GetUser().ProviderUserKey;
-                    ////unitOfWork.PhotoRepository.Insert(photo);
-                    ////unitOfWork.Save();
-                    return RedirectToAction("Index", "Home");
+                    unitOfWork.PhotoRepository.Update(photo);
+                    unitOfWork.Save();
+                    return RedirectToAction("Details", "Photo", new { id = model.ID });
                 }
             }
             catch (DataException)
@@ -153,14 +155,21 @@ namespace PhotoBook.Controllers
         public ActionResult Delete(int id)
         {
             var photoToDelete = unitOfWork.PhotoRepository.GetByID(id);
-            unitOfWork.PhotoRepository.Delete(id);
-            unitOfWork.Save();
-            string[] photos = System.IO.Directory.GetFiles(Server.MapPath(Settings.Default.UserUploads), "*" + photoToDelete.Filename);
-            foreach (var photo in photos)
+            if (photoToDelete.UserID == WebSecurity.CurrentUserId)
             {
-                System.IO.File.Delete(photo);
+                unitOfWork.PhotoRepository.Delete(id);
+                unitOfWork.Save();
+                string[] photos = System.IO.Directory.GetFiles(Server.MapPath(Settings.Default.UserUploads), "*" + photoToDelete.Filename);
+                foreach (var photo in photos)
+                {
+                    System.IO.File.Delete(photo);
+                }
+                return RedirectToAction("Photos", "PhotoBook", new { id = WebSecurity.CurrentUserId });
             }
-            return RedirectToAction("Photos", "PhotoBook");
+            else
+            {
+                return RedirectToAction("Http403", "Error");
+            }
         }
     }
 }

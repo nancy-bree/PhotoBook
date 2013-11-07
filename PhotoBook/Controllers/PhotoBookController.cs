@@ -13,6 +13,7 @@ using WebMatrix.WebData;
 
 namespace PhotoBook.Web.Controllers
 {
+    [HandleError]
     public class PhotoBookController : Controller
     {
         private IUnitOfWork unitOfWork = new UnitOfWork();
@@ -22,6 +23,7 @@ namespace PhotoBook.Web.Controllers
 
         public ActionResult Index()
         {
+            ViewData["TagCloud"] = unitOfWork.TagRepository.Get();
             return View();
         }
 
@@ -62,11 +64,12 @@ namespace PhotoBook.Web.Controllers
             }
             else 
             {
-                // if clicked the same item then delete vote
+                // if clicked the same item then do nothing
                 if ((rating.Like == 1 && action == "up") || (rating.Dislike == 1 && action == "down"))
                 {
-                    unitOfWork.RatingRepository.Delete(rating);
-                    unitOfWork.Save();
+                    //unitOfWork.RatingRepository.Delete(rating);
+                    //unitOfWork.Save();
+                    return unitOfWork.RatingRepository.GetPhotoRating(photoid);
                 }
                 else
                 {

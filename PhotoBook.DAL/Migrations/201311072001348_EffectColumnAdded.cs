@@ -1,0 +1,20 @@
+namespace PhotoBook.DAL.Migrations
+{
+    using System;
+    using System.Data.Entity.Migrations;
+    
+    public partial class EffectColumnAdded : DbMigration
+    {
+        public override void Up()
+        {
+            AddColumn("dbo.Photos", "Effect", c => c.Int(nullable: false));
+            DropColumn("dbo.Photos", "HasEffect");
+        }
+        
+        public override void Down()
+        {
+            AddColumn("dbo.Photos", "HasEffect", c => c.Boolean(nullable: false));
+            DropColumn("dbo.Photos", "Effect");
+        }
+    }
+}

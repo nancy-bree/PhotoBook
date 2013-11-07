@@ -28,8 +28,8 @@
     @if (Model.UserID == WebSecurity.CurrentUserId)
     {
         <div>
-            @Html.ActionLink("Edit Photo", "Edit", "Photo", new { id = Model.ID }, new { @class="btn btn-default", role="button"})
-            @Html.ActionLink("Delete Photo", "Delete", "Photo", new { id = Model.ID }, new { @class="btn btn-default", role="button"})
+            @Html.ActionLink("Edit", "Edit", "Photo", new { id = Model.ID }, new { @class="btn btn-primary", role="button"})
+            @Html.ActionLink("Delete", "Delete", "Photo", new { id = Model.ID }, new { @class="btn btn-primary", role="button"})
         </div>
     }
     </div>

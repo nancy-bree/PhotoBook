@@ -56,7 +56,7 @@ namespace PhotoBook.Web.Controllers
         {
             WebSecurity.Logout();
 
-            return RedirectToAction("Index", "Home");
+            return RedirectToAction("Index", "PhotoBook");
         }
 
         //
@@ -373,7 +373,7 @@ namespace PhotoBook.Web.Controllers
             }
             else
             {
-                return RedirectToAction("Index", "Home");
+                return RedirectToAction("Index", "PhotoBook");
             }
         }
 

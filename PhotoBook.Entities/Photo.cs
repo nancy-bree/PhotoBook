@@ -19,7 +19,7 @@ namespace PhotoBook.Entities
         [Required]
         public int UserID { get; set; }
 
-        public bool HasEffect { get; set; }
+        public int Effect { get; set; }
 
         public virtual User User { get; set; }
 
