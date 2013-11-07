@@ -19,6 +19,8 @@ namespace PhotoBook.Entities
         [Required]
         public int UserID { get; set; }
 
+        public bool HasEffect { get; set; }
+
         public virtual User User { get; set; }
 
         public virtual ICollection<Tag> Tags { get; set; }

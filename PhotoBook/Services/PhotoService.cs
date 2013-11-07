@@ -33,30 +33,67 @@ namespace PhotoBook.Services
             return filename;
         }
 
-        private static void SaveSepia(string path, string name)
+        private static void SaveSepia(string path, string newPath)
         {
-            string sepiaFilename = "_sepia_" + name + Path.GetExtension(path);
-            string sepiaPath = GetPhotoPath(sepiaFilename);
-            PhotoEditor.ToSepia(path, 20).Save(sepiaPath, System.Drawing.Imaging.ImageFormat.Jpeg);
+            PhotoEditor.ToSepia(path, 20).Save(newPath, System.Drawing.Imaging.ImageFormat.Jpeg);
         }
 
-        private static void SaveGrayscale(string path, string name)
+        private static void SaveGrayscale(string path, string newPath)
         {
-            string grayscaleFilename = "_gs_" + name + Path.GetExtension(path);
-            string grayscalePath = GetPhotoPath(grayscaleFilename);
-            PhotoEditor.ToGrayscale(path).Save(grayscalePath, System.Drawing.Imaging.ImageFormat.Jpeg);
+            PhotoEditor.ToGrayscale(path).Save(newPath, System.Drawing.Imaging.ImageFormat.Jpeg);
         }
 
-        private static void SaveContrast(string path, string name)
+        private static void SaveContrast(string path, string newPath)
         {
-            string contrastFilename = "_contrast_" + name + Path.GetExtension(path);
-            string contrastPath = GetPhotoPath(contrastFilename);
-            PhotoEditor.ApplyContrast(path, 20).Save(contrastPath, System.Drawing.Imaging.ImageFormat.Jpeg);
+            PhotoEditor.ApplyContrast(path, 20).Save(newPath, System.Drawing.Imaging.ImageFormat.Jpeg);
         }
 
         private static string GetPhotoPath(string filename)
         {
             return Path.Combine(HttpContext.Current.Server.MapPath(PhotoBook.Properties.Settings.Default.UserUploads), filename);
+        }
+
+        public static void ApplyEffect(Effect effect, string filename)
+        {
+            string tmpFilename = "_tmp_" + filename;
+            string tmpPath = GetPhotoPath(tmpFilename);
+            string sourcePath = GetPhotoPath(filename);
+
+            if (!File.Exists(tmpPath))
+            {
+                File.Copy(sourcePath, tmpPath);
+            }
+            File.Delete(sourcePath);
+
+            switch (effect)
+            {
+                case Effect.Autocontrast:
+                    {
+                        SaveContrast(tmpPath, sourcePath);
+                        break;
+                    }
+                case Effect.Monochrome:
+                    {
+                        SaveGrayscale(tmpPath, sourcePath);
+                        break;
+                    }
+                case Effect.Sepia:
+                    {
+                        SaveSepia(tmpPath, sourcePath);
+                        break;
+                    }
+            }
+        }
+
+        public static void DeleteEffect(string filename)
+        {
+            string tmpFilename = "_tmp_" + filename;
+            string tmpPath = GetPhotoPath(tmpFilename);
+            string sourcePath = GetPhotoPath(filename);
+
+            File.Delete(sourcePath);
+            File.Move(tmpPath, sourcePath);
+            File.Delete(tmpPath);
         }
     }
 }

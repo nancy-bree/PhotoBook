@@ -19,7 +19,10 @@ namespace PhotoBook.DAL
 
         protected override void OnModelCreating(DbModelBuilder modelBuilder)
         {
-            
+            modelBuilder.Entity<Photo>()
+                .Property(x => x.HasEffect)
+                .HasDatabaseGeneratedOption(0);
+
             modelBuilder.Entity<Photo>()
                 .HasMany(x => x.Tags)
                 .WithMany(y => y.Photos)

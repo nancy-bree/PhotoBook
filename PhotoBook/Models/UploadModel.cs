@@ -9,7 +9,7 @@ namespace PhotoBook.Models
     {
         [Required]
         [FileSize(10240000)]
-        [FileTypes("jpg,jpeg,png")]
+        [FileTypes("jpg,jpeg")]
         public HttpPostedFileBase Photo { get; set; }
 
         public string Description { get; set; }

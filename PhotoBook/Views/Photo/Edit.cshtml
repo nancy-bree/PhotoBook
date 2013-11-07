@@ -1,4 +1,5 @@
 ﻿@model PhotoBook.Models.EditModel
+@using PhotoBook.Services
 
 @{
     ViewBag.Title = "Edit Photo";
@@ -20,6 +21,7 @@
     @Html.AntiForgeryToken()
 
     @Html.HiddenFor(model => model.ID)
+    @Html.HiddenFor(model => model.Photo)
 
     <div class="form-group">
         @Html.LabelFor(model => model.Description)
@@ -37,22 +39,40 @@
         <legend>Filters</legend>
         <div class="radio">
           <label>
-            <input type="radio" name="filters" id="autocontrast" value="autocontrast">
+                @Html.RadioButtonFor(model => Model.Effect, Effect.Autocontrast)
             Autocontrast
           </label>
         </div>
         <div class="radio">
           <label>
-            <input type="radio" name="filters" id="monochrome" value="monochrome">
+            @Html.RadioButtonFor(model => Model.Effect, Effect.Monochrome)
             Monochrome
           </label>
         </div>
         <div class="radio">
           <label>
-            <input type="radio" name="filters" id="sepia" value="sepia">
+            @Html.RadioButtonFor(model => Model.Effect, Effect.Sepia)
             Sepia
           </label>
         </div>
+        @*<div class="radio">
+          <label>
+            <input type="radio" name="effect" id="Autocontrast" value="Autocontrast">
+            Autocontrast
+          </label>
+        </div>
+        <div class="radio">
+          <label>
+            <input type="radio" name="effect" id="Monochrome" value="Monochrome">
+            Monochrome
+          </label>
+        </div>
+        <div class="radio">
+          <label>
+            <input type="radio" name="effect" id="Sepia" value="Sepia">
+            Sepia
+          </label>
+        </div>*@
     </fieldset>
 
     <input type="submit" value="Save" class="btn btn-default" />

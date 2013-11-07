@@ -21,26 +21,17 @@ namespace PhotoBook.Controllers
         //
         // GET: /Photo/
 
-        public ActionResult Slideshow(int id = 1)
+        public ActionResult Slideshow(string type, int id = 1)
         {
-            //switch (type)
-            //{
-            //    case "user":
-            //        {
-            //            var list = unitOfWork.UserRepository.GetByID(id).Photos;
-            //            ViewBag.FirstPhoto = list.First();
-            //            View(list);
-            //            break;
-            //        }
-            //    case "tag":
-            //        {
-            //            var list = unitOfWork.TagRepository.GetByID(id).Photos;
-            //            ViewBag.FirstPhoto = list.First();
-            //            View(list);
-            //            break;
-            //        }
-            //}
-            var list = unitOfWork.UserRepository.GetByID(id).Photos;
+            IEnumerable<Photo> list;
+            if (type == "user")
+            {
+                list = unitOfWork.UserRepository.GetByID(id).Photos;
+            }
+            else
+            {
+                list = unitOfWork.PhotoRepository.Get().Where(x => x.Tags.Any(y => y.ID == id));
+            }
             ViewBag.FirstPhoto = list.First();
             return View(list);
         }
@@ -124,6 +115,10 @@ namespace PhotoBook.Controllers
             {
                 if (ModelState.IsValid)
                 {
+                    if (model.Effect != null)
+                    {
+                        PhotoService.ApplyEffect(model.Effect, model.Photo);
+                    }
                     //var user = unitOfWork.UserRepository.GetByID(WebSecurity.CurrentUserId);
                     //Photo photo = new Photo()
                     //{

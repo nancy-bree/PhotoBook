@@ -15,5 +15,7 @@ namespace PhotoBook.Models
         public string Description { get; set; }
 
         public string Tags { get; set; }
+
+        public Effect Effect { get; set; }
     }
 }

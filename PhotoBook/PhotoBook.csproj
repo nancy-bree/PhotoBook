@@ -195,7 +195,7 @@
     </Compile>
     <Compile Include="Services\FileSizeAttribute.cs" />
     <Compile Include="Services\FileTypesAttribute.cs" />
-    <Compile Include="Services\Filter.cs" />
+    <Compile Include="Services\Effect.cs" />
     <Compile Include="Services\PhotoEditor.cs" />
     <Compile Include="Services\PhotoService.cs" />
     <Compile Include="Services\TagService.cs" />

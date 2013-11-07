@@ -59,6 +59,10 @@
     <Compile Include="Migrations\201311052016493_AddLikeDislikeColumns.Designer.cs">
       <DependentUpon>201311052016493_AddLikeDislikeColumns.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201311071105383_NewHasEffectColumn.cs" />
+    <Compile Include="Migrations\201311071105383_NewHasEffectColumn.Designer.cs">
+      <DependentUpon>201311071105383_NewHasEffectColumn.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="PhotoBookContext.cs" />
     <Compile Include="PhotoRepository.cs" />
@@ -85,6 +89,9 @@
     <EmbeddedResource Include="Migrations\201311042012451_Change Vote column type.resx" />
     <EmbeddedResource Include="Migrations\201311052016493_AddLikeDislikeColumns.resx">
       <DependentUpon>201311052016493_AddLikeDislikeColumns.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201311071105383_NewHasEffectColumn.resx">
+      <DependentUpon>201311071105383_NewHasEffectColumn.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
