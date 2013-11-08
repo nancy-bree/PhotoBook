@@ -27,5 +27,14 @@ namespace PhotoBook.DAL
             var query = _context.Rating.Where(x => x.PhotoID == photoId && x.UserID == userId).FirstOrDefault();
             return query;
         }
+
+        public List<int> GetPopularPhotosIDs()
+        {
+            var query = from x in _context.Rating
+                        where (x.Like - x.Dislike) >= 0 
+                        orderby x.Like - x.Dislike descending
+                        select x.PhotoID;
+            return query.ToList();
+        }
     }
 }

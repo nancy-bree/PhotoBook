@@ -1,0 +1,13 @@
+﻿@model IEnumerable<PhotoBook.Entities.Tag>
+
+    <h3 class="center">Tag cloud</h3>
+    @foreach (var t in Model )
+    {
+        int count = 1;
+        if (t.Photos != null) 
+        {
+            count = t.Photos.Count;
+        }
+        @Html.ActionLink(t.Name, "Index", "Tag", new { id = t.ID }, new { @class = PhotoBook.Services.TagService.GetTagClass(count, ViewBag.TotalPhotosCount)})
+        @:&nbsp;
+    }

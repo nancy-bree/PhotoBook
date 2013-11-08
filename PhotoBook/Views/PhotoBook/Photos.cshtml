@@ -4,13 +4,12 @@
 @{
     ViewBag.Title = "Photos";
 }
-
 @{ PhotoBook.DAL.UnitOfWork unitOfWork = new PhotoBook.DAL.UnitOfWork(); }
 <div class="page-header center">
   <h1>@ViewBag.Title
       @if (Model.Count > 0)
       {
-        @:&nbsp;<small>@Html.ActionLink("View as a slideshow", "Slideshow", "Photo", new { type = "user", id = ViewBag.UserID }, null)</small>
+        @:&nbsp;<small>@Html.ActionLink("View as a slideshow", "Slideshow", "Photo", new { type = "popular"}, null)</small>
       }
   </h1>
 </div>
@@ -30,11 +29,11 @@
                 {
                     <div class="menu-gallery" data-photoid="@item.ID" data-score="@rating" data-userid="@item.UserID" >
                         <div class="vote-span"><!-- voting-->
-                            <div class="vote" data-action="up" title="Vote up" @*style="@color1"*@ >
+                            <div class="vote" data-action="up" title="Vote up">
                                 <span class="glyphicon glyphicon-arrow-up"/>
                             </div><!--vote up-->
                             <div class="vote-score">@rating</div>
-                            <div class="vote" data-action="down" title="Vote down" @*style="@color2"*@>
+                            <div class="vote" data-action="down" title="Vote down">
                                 <span class="glyphicon glyphicon-arrow-down"/>
                             </div><!--vote down-->
                       </div>
@@ -68,6 +67,41 @@
 }
 </div>
 @Html.PagedListPager(Model, page => Url.Action("Photos", new RouteValueDictionary {{"id", ViewBag.UserID}, {"page", page }}), PagedListRenderOptions.PageNumbersOnly)
+@*<script src="@Url.Content("~/Scripts/coffee-script.js")"></script>
+
+<script type="text/coffeescript">
+    $(document).ready ->
+  $.ajaxSetup
+    url: "/PhotoBook/AjaxVote"
+    type: "POST"
+    cache: "false"
+
+  $(".vote").click ->
+    self = $(this)
+    action = self.data("action")
+    parent = self.parent().parent()
+    photoid = parent.data("photoid")
+    score = parent.data("score")
+    userid = parent.data("userid")
+    if action is "up"
+      $.ajax
+        data:
+          photoid: photoid
+          action: "up"
+
+        success: (result) ->
+          parent.find(".vote-score").html result
+
+    else if action is "down"
+      $.ajax
+        data:
+          photoid: photoid
+          action: "down"
+
+        success: (result) ->
+          parent.find(".vote-score").html result
+</script>*@
+
 <script>
     $(document).ready(function () {
         $.ajaxSetup({

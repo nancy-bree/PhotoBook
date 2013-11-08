@@ -10,10 +10,12 @@ using System.Data;
 using PagedList;
 using PhotoBook.Properties;
 using WebMatrix.WebData;
+using PhotoBook.Models;
+using PhotoBook.Services;
 
 namespace PhotoBook.Web.Controllers
 {
-    [HandleError]
+    //[HandleError]
     public class PhotoBookController : Controller
     {
         private IUnitOfWork unitOfWork = new UnitOfWork();
@@ -21,10 +23,13 @@ namespace PhotoBook.Web.Controllers
         //
         // GET: /PhotoBook/
 
-        public ActionResult Index()
+        public ActionResult Index(int page = 1)
         {
-            ViewData["TagCloud"] = unitOfWork.TagRepository.Get();
-            return View();
+            var tags = unitOfWork.TagRepository.Get().OrderBy(x => x.Name);
+            ViewBag.TotalPhotosCount = unitOfWork.PhotoRepository.Get().Count();
+            var popularPhotos = RatingService.GetPopularPhotosList();
+            var model = new MainPageModel(tags, popularPhotos, page);
+            return View(model);
         }
 
         public ActionResult Photos(int id = 1, int page = 1)
@@ -32,6 +37,20 @@ namespace PhotoBook.Web.Controllers
             ViewBag.UserID = id;
             var photos = unitOfWork.UserRepository.GetByID(id).Photos;
             return View(photos.ToPagedList(page, Settings.Default.PhotosPerPage));
+        }
+
+        public ActionResult UserAlbum(int page = 1)
+        {
+            List<AlbumViewModel> albumList = new List<AlbumViewModel>();
+            var users = unitOfWork.UserRepository.Get();
+            foreach (var user in users)
+            {
+                Random random = new Random();
+                int toSkip = random.Next(0, user.Photos.Count);
+                var cover =user.Photos.Skip(toSkip).Take(1).First().Filename;
+                albumList.Add(new AlbumViewModel() { ID = user.ID, Count = user.Photos.Count, Cover = cover, Username = user.UserName });
+            }
+            return View(albumList.ToPagedList(page, Settings.Default.PhotosPerPage));
         }
 
         [HttpPost]

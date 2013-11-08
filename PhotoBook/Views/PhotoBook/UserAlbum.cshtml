@@ -1,0 +1,36 @@
+﻿@model PagedList.IPagedList<PhotoBook.Models.AlbumViewModel>
+@using PagedList.Mvc
+
+@{
+    ViewBag.Title = "Albums";
+}
+
+<div class="page-header center">
+  <h1>@ViewBag.Title</h1>
+</div>
+
+<div class="row">
+@{
+    int index = 0;
+    foreach(var item in Model)
+    {
+        if (index % 3 == 0)
+        {
+            @:</div><div class="row">
+        }
+            <div class="col-md-3 gallery">
+                <div class="menu-gallery">
+                    <em class="username-field">@item.Username</em>
+                </div>
+                <div class="image-gallery">
+                    <a href="@Url.Action("Photos", "PhotoBook", new { id = item.ID})"><img src="@Url.Content(String.Concat("~/_uploads/", "_thumbnail_", item.Cover))" alt="photo" /></a>
+                </div>
+                <div class="tags-gallery">
+                    <em>Photos: @item.Count</em>
+                </div>
+            </div>
+        index++;
+    }
+}
+</div>
+@Html.PagedListPager(Model, page => Url.Action("Photos", new RouteValueDictionary {{"id", ViewBag.UserID}, {"page", page }}), PagedListRenderOptions.PageNumbersOnly)

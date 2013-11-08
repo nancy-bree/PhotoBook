@@ -184,7 +184,9 @@
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
     <Compile Include="Models\AccountModels.cs" />
+    <Compile Include="Models\AlbumViewModel.cs" />
     <Compile Include="Models\EditModel.cs" />
+    <Compile Include="Models\MainPageModel.cs" />
     <Compile Include="Models\PhotoViewModel.cs" />
     <Compile Include="Models\UploadModel.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -198,6 +200,7 @@
     <Compile Include="Services\Effect.cs" />
     <Compile Include="Services\PhotoEditor.cs" />
     <Compile Include="Services\PhotoService.cs" />
+    <Compile Include="Services\RatingService.cs" />
     <Compile Include="Services\TagService.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -285,6 +288,7 @@
     <None Include="Scripts\jquery-1.9.1.intellisense.js" />
     <Content Include="Scripts\bootstrap.js" />
     <Content Include="Scripts\bootstrap.min.js" />
+    <Content Include="Scripts\coffee-script.js" />
     <Content Include="Scripts\gallery\ajax-loader_dark.gif" />
     <Content Include="Scripts\gallery\empty.gif" />
     <Content Include="Scripts\gallery\fs_img_g_bg.png" />
@@ -349,6 +353,9 @@
     <Content Include="Views\Error\Http404.cshtml" />
     <Content Include="Views\Error\Http403.cshtml" />
     <Content Include="Views\PhotoBook\Index.cshtml" />
+    <Content Include="Views\PhotoBook\UserAlbum.cshtml" />
+    <Content Include="Views\Shared\_TagCloud.cshtml" />
+    <Content Include="Views\Shared\_PopularPhotos.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

@@ -22,14 +22,18 @@ namespace PhotoBook.Controllers
 
         public ActionResult Slideshow(string type, int id = 1)
         {
-            IEnumerable<Photo> list;
+            List<Photo> list;
             if (type == "user")
             {
-                list = unitOfWork.UserRepository.GetByID(id).Photos;
+                list = unitOfWork.UserRepository.GetByID(id).Photos.ToList();
+            }
+            if (type == "tag")
+            {
+                list = unitOfWork.PhotoRepository.Get().Where(x => x.Tags.Any(y => y.ID == id)).ToList();
             }
             else
             {
-                list = unitOfWork.PhotoRepository.Get().Where(x => x.Tags.Any(y => y.ID == id));
+                list = RatingService.GetPopularPhotosList(); 
             }
             ViewBag.FirstPhoto = list.First();
             return View(list);
@@ -53,21 +57,24 @@ namespace PhotoBook.Controllers
                     photo.Description = model.Description;
                     photo.Filename = Services.PhotoService.SavePhoto(model.Photo);
                     photo.UserID = (int)Membership.GetUser().ProviderUserKey;
-                    IEnumerable<string> tags = TagService.SplitTags(model.Tags).Distinct();
-                    photo.Tags = new List<Tag>();
-                    foreach (var tag in tags)
+                    if (model.Tags != null)
                     {
-                        var tmp = unitOfWork.TagRepository.GetTagByName(tag.Trim());
-                        if (tmp == null)
+                        IEnumerable<string> tags = TagService.SplitTags(model.Tags).Distinct();
+                        photo.Tags = new List<Tag>();
+                        foreach (var tag in tags)
                         {
-                            tmp = new Tag()
+                            var tmp = unitOfWork.TagRepository.GetTagByName(tag.Trim());
+                            if (tmp == null)
                             {
-                                Name = tag.Trim()
-                            };
-                            unitOfWork.TagRepository.Insert(tmp);
-                            unitOfWork.Save();
+                                tmp = new Tag()
+                                {
+                                    Name = tag.Trim()
+                                };
+                                unitOfWork.TagRepository.Insert(tmp);
+                                unitOfWork.Save();
+                            }
+                            photo.Tags.Add(tmp);
                         }
-                        photo.Tags.Add(tmp);
                     }
                     unitOfWork.PhotoRepository.Insert(photo);
                     unitOfWork.Save();
@@ -123,23 +130,38 @@ namespace PhotoBook.Controllers
                 if (ModelState.IsValid)
                 {
                     var user = unitOfWork.UserRepository.GetByID(WebSecurity.CurrentUserId);
-                    Photo photo = new Photo()
+                    var oldPhoto = unitOfWork.PhotoRepository.GetByID(model.ID);
+                    oldPhoto.Description = model.Description;
+                    oldPhoto.User = user;
+                    if (oldPhoto.Effect != (int)model.Effect)
                     {
-                        ID = model.ID,
-                        Description = model.Description,
-                        Filename = model.Photo,
-                        UserID = WebSecurity.CurrentUserId,
-                        User = user,
-                        Effect = (int)model.Effect
-                    };
-                    PhotoService.ApplyEffect(model.Effect, model.Photo);
-                    IEnumerable<string> tags = TagService.SplitTags(model.Tags).Distinct();
-                    photo.Tags = new List<Tag>();
-                    foreach (var tag in tags)
-                    {
-                        photo.Tags.Add(unitOfWork.TagRepository.GetTagByName(tag));
+                        PhotoService.ApplyEffect(model.Effect, model.Photo);
                     }
-                    unitOfWork.PhotoRepository.Update(photo);
+                    oldPhoto.Effect = (int)model.Effect;
+                    if (model.Tags != null)
+                    {
+                        IEnumerable<string> tags = TagService.SplitTags(model.Tags).Distinct();
+                        oldPhoto.Tags = new List<Tag>();
+                        foreach (var tag in tags)
+                        {
+                            var tmp = unitOfWork.TagRepository.GetTagByName(tag.Trim());
+                            if (tmp == null)
+                            {
+                                tmp = new Tag()
+                                {
+                                    Name = tag.Trim()
+                                };
+                                unitOfWork.TagRepository.Insert(tmp);
+                                unitOfWork.Save();
+                            }
+                            oldPhoto.Tags.Add(tmp);
+                        }
+                    }
+                    else
+                    {
+                        oldPhoto.Tags = null;
+                    }
+                    unitOfWork.PhotoRepository.Update(oldPhoto);
                     unitOfWork.Save();
                     return RedirectToAction("Details", "Photo", new { id = model.ID });
                 }

@@ -1,13 +1,11 @@
-﻿@{
+﻿@model PhotoBook.Models.MainPageModel
+@{
     ViewBag.Title = "Welcome to PhotoBook!";
 }
-<div id="tags" style="max-width: 200px;">
-    @foreach (var t in (IEnumerable<PhotoBook.Entities.Tag>) ViewData["TagCloud"] )
-    {
-        int count = 1;
-        if (t.Photos == null) { count = 1; }
-        @Html.ActionLink(t.Name, "Index", "Tag", new { id = t.ID }, new { @class = PhotoBook.Services.TagService.GetTagClass(count, t.ID)})
-        @:&nbsp;
-    }
+<div class="col-md-10">
+    @Html.Partial("~/Views/Shared/_PopularPhotos.cshtml", Model.PopularPhotos)
+</div>
+<div id="tags" class="col-md-2">
+    @Html.Partial("~/Views/Shared/_TagCloud.cshtml", Model.TagCloud)
 </div>
 

@@ -15,6 +15,6 @@ namespace PhotoBook.Entities
         [StringLength(255, MinimumLength = 1)]
         public string Name { get; set; }
 
-        public ICollection<Photo> Photos { get; set; }
+        public virtual ICollection<Photo> Photos { get; set; }
     }
 }

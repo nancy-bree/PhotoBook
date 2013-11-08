@@ -92,11 +92,21 @@ margin-right: auto !important;
 }
 .vote-score{cursor: text; font-weight: bold;}
 
+.username-field {
+    margin: 5px auto;
+    display: table;
+    font-size: 1.5em;
+}
+
 /*
 ------------------------------
   Tag Cloud
 ------------------------------
 */
+
+#tags {
+    text-align: justify;
+}
 
 .tag1{font-size: 0.8em}
 .tag2{font-size: 0.9em}

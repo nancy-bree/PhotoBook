@@ -12,6 +12,7 @@
               @if (Request.IsAuthenticated)
               {
                   <ul class="nav navbar-nav">
+                      <li>@Html.ActionLink("Albums", "UserAlbum", "PhotoBook")</li>
                       <li>@Html.ActionLink("My Photos", "Photos", "PhotoBook", new { id = (int)@Membership.GetUser().ProviderUserKey}, null)</li>
                       <li>@Html.ActionLink("Upload", "Upload", "Photo")</li>
                   </ul>
@@ -33,6 +34,9 @@
                     </li>
                 </ul>
               } else {
+                  <ul class="nav navbar-nav">
+                      <li>@Html.ActionLink("Albums", "UserAlbum", "PhotoBook")</li>
+                  </ul>
                 <ul class="nav navbar-nav navbar-right">
                     <li>
                         <a href="@Url.Action("Register", "Account")">

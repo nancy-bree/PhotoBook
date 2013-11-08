@@ -67,6 +67,14 @@
     <Compile Include="Migrations\201311072001348_EffectColumnAdded.Designer.cs">
       <DependentUpon>201311072001348_EffectColumnAdded.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201311081833094_RatingTypeChanged.cs" />
+    <Compile Include="Migrations\201311081833094_RatingTypeChanged.Designer.cs">
+      <DependentUpon>201311081833094_RatingTypeChanged.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201311081833521_RatingTypeChanged2.cs" />
+    <Compile Include="Migrations\201311081833521_RatingTypeChanged2.Designer.cs">
+      <DependentUpon>201311081833521_RatingTypeChanged2.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="PhotoBookContext.cs" />
     <Compile Include="PhotoRepository.cs" />
@@ -99,6 +107,12 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201311072001348_EffectColumnAdded.resx">
       <DependentUpon>201311072001348_EffectColumnAdded.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201311081833094_RatingTypeChanged.resx">
+      <DependentUpon>201311081833094_RatingTypeChanged.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201311081833521_RatingTypeChanged2.resx">
+      <DependentUpon>201311081833521_RatingTypeChanged2.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

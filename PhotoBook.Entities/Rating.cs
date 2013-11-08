@@ -14,8 +14,8 @@ namespace PhotoBook.Entities
 
         public int UserID { get; set; }
 
-        public byte Like { get; set; }
+        public int Like { get; set; }
 
-        public byte Dislike { get; set; }
+        public int Dislike { get; set; }
     }
 }

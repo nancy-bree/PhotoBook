@@ -1,0 +1,66 @@
+﻿@model PagedList.IPagedList<PhotoBook.Entities.Photo>
+@using PagedList.Mvc
+
+@{ PhotoBook.DAL.UnitOfWork unitOfWork = new PhotoBook.DAL.UnitOfWork(); }
+    <div class="page-header center">
+        <h1>Popular Photos
+            @if (Model.Count > 0)
+              {
+                @:&nbsp;<small>@Html.ActionLink("View as a slideshow", "Slideshow", "Photo", new { type = "popular"}, null)</small>
+              }
+        </h1>
+    </div>
+
+<div class="row">
+@{
+    int index = 0;
+    foreach(var item in Model)
+    {
+        int rating = unitOfWork.RatingRepository.GetPhotoRating(item.ID);
+        if (index % 3 == 0)
+        {
+            @:</div><div class="row">
+        }
+            <div class="col-md-3 gallery">
+                @if ((User.Identity.IsAuthenticated) && (item.UserID != WebSecurity.CurrentUserId))
+                {
+                    <div class="menu-gallery" data-photoid="@item.ID" data-score="@rating" data-userid="@item.UserID" >
+                        <div class="vote-span"><!-- voting-->
+                            <div class="vote" data-action="up" title="Vote up" @*style="@color1"*@ >
+                                <span class="glyphicon glyphicon-arrow-up"/>
+                            </div><!--vote up-->
+                            <div class="vote-score">@rating</div>
+                            <div class="vote" data-action="down" title="Vote down" @*style="@color2"*@>
+                                <span class="glyphicon glyphicon-arrow-down"/>
+                            </div><!--vote down-->
+                      </div>
+                </div>
+                }
+                else
+                {
+                    <div class="menu-gallery" data-photoid="@item.ID" data-score="@rating" data-userid="@item.UserID" >
+                        <div class="vote-span"><!-- voting-->
+                            <div class="vote-score">@rating</div>
+                        </div>
+                    </div>
+                }
+                <div class="image-gallery">
+                    <a href="@Url.Action("Details", "Photo", new { id = item.ID})"><img src="@Url.Content(String.Concat("~/_uploads/", "_thumbnail_", item.Filename))" alt="@item.Description" /></a>
+                </div>
+                <div class="tags-gallery">
+                    <span class="glyphicon glyphicon-tags" /> Tags: 
+                    @if (item.Tags.Count == 0)
+                    {
+                        <em>none</em>
+                    }
+                    else
+                    {
+                        <em>@Html.Raw(String.Join(", ", item.Tags.Select(tag => @Html.ActionLink(tag.Name, "Index", "Tag", new { id = tag.ID}, null).ToHtmlString()).ToArray()))</em>
+                    }
+                </div>
+            </div>
+        index++;
+    }
+}
+</div>
+@Html.PagedListPager(Model, page => Url.Action("Index", new RouteValueDictionary {{"page", page }}), PagedListRenderOptions.PageNumbersOnly)
