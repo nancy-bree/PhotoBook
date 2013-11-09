@@ -36,5 +36,15 @@ namespace PhotoBook.DAL
                         select x.PhotoID;
             return query.ToList();
         }
+
+        public void DeletePhotoRating(int photoId)
+        {
+            var photo = this.GetByID(photoId);
+            var query = _context.Rating.Where(x => x.PhotoID == photoId);
+            foreach (var item in query)
+            {
+                this.Delete(item);
+            }
+        }
     }
 }

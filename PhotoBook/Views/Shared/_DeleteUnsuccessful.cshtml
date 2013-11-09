@@ -1,0 +1,10 @@
+﻿@{
+    ViewBag.Title = "Sorry";
+}
+
+<h2>Photo deletion failed.</h2>
+
+<h3>
+    Something was wrong. You can @Html.ActionLink("return to album", "Details", "Photo", new { id = ViewBag.PhotoID }, null) 
+    and try again.
+</h3>

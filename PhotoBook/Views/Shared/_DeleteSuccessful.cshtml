@@ -1,0 +1,7 @@
+﻿@{
+    ViewBag.Title = "Success";
+}
+
+<h2>The photo has been deleted successfully.</h2>
+
+@Html.ActionLink("Return to album", "Photos", "PhotoBook", new { id = WebSecurity.CurrentUserId }, null)

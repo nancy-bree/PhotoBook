@@ -138,7 +138,7 @@ namespace PhotoBook.Controllers
                         PhotoService.ApplyEffect(model.Effect, model.Photo);
                     }
                     oldPhoto.Effect = (int)model.Effect;
-                    if (model.Tags != null)
+                    if ((model.Tags != null) && !String.IsNullOrWhiteSpace(model.Tags))
                     {
                         IEnumerable<string> tags = TagService.SplitTags(model.Tags).Distinct();
                         oldPhoto.Tags = new List<Tag>();
@@ -159,7 +159,7 @@ namespace PhotoBook.Controllers
                     }
                     else
                     {
-                        oldPhoto.Tags = null;
+                        unitOfWork.PhotoRepository.DeletePhotoTag(oldPhoto.ID);
                     }
                     unitOfWork.PhotoRepository.Update(oldPhoto);
                     unitOfWork.Save();
@@ -179,14 +179,27 @@ namespace PhotoBook.Controllers
             var photoToDelete = unitOfWork.PhotoRepository.GetByID(id);
             if (photoToDelete.UserID == WebSecurity.CurrentUserId)
             {
-                unitOfWork.PhotoRepository.Delete(id);
-                unitOfWork.Save();
-                string[] photos = System.IO.Directory.GetFiles(Server.MapPath(Settings.Default.UserUploads), "*" + photoToDelete.Filename);
-                foreach (var photo in photos)
+                try
                 {
-                    System.IO.File.Delete(photo);
+                    unitOfWork.PhotoRepository.Delete(id);
+                    unitOfWork.RatingRepository.DeletePhotoRating(id);
+                    unitOfWork.Save();
+                    string[] photos = System.IO.Directory.GetFiles(Server.MapPath(Settings.Default.UserUploads), "*" + photoToDelete.Filename);
+                    foreach (var photo in photos)
+                    {
+                        if (System.IO.File.Exists(photo))
+                        {
+                            System.IO.File.Delete(photo);
+                        }
+                    }
+                    return View("~/Views/Shared/_DeleteSuccessful.cshtml");
+                    //throw new System.IO.IOException();    // only to test IOExeption
                 }
-                return RedirectToAction("Photos", "PhotoBook", new { id = WebSecurity.CurrentUserId });
+                catch (System.IO.IOException)
+                {
+                    ViewBag.PhotoID = photoToDelete.ID;
+                    return View("~/Views/Shared/_DeleteUnsuccessful.cshtml");
+                }
             }
             else
             {
