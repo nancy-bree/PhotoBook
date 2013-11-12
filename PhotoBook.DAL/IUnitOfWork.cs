@@ -1,4 +1,6 @@
 ﻿using System;
+using PhotoBook.Entities;
+
 namespace PhotoBook.DAL
 {
     public interface IUnitOfWork : IDisposable

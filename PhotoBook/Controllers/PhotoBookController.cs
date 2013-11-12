@@ -18,7 +18,12 @@ namespace PhotoBook.Web.Controllers
     //[HandleError]
     public class PhotoBookController : Controller
     {
-        private IUnitOfWork unitOfWork = new UnitOfWork();
+        private IUnitOfWork unitOfWork = null;
+
+        public PhotoBookController(IUnitOfWork _unitOfWork)
+        {
+            this.unitOfWork = _unitOfWork;
+        }
 
         //
         // GET: /PhotoBook/

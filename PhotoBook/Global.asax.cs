@@ -1,14 +1,9 @@
 ﻿using PhotoBook.DAL;
-using System;
-using System.Collections.Generic;
-using System.Data.Entity;
-using System.Linq;
-using System.Web;
 using System.Web.Http;
 using System.Web.Mvc;
-using System.Web.Optimization;
 using System.Web.Routing;
 using WebMatrix.WebData;
+using PhotoBook.Infrastructure;
 
 namespace PhotoBook
 {
@@ -31,6 +26,9 @@ namespace PhotoBook
             if (!WebSecurity.Initialized)
                 WebSecurity.InitializeDatabaseConnection("PhotoBookContext",
                     "Users", "ID", "UserName", autoCreateTables: true);
+
+            ControllerBuilder.Current.SetControllerFactory(new PhotoBookControllerFactory());
+            BootStrapper.ConfigureDependencies();
         }
     }
 }

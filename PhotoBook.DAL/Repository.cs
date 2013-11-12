@@ -14,8 +14,15 @@ namespace PhotoBook.DAL
 
         public Repository(PhotoBookContext context)
         {
-            this._context = context;
-            this._dbSet = context.Set<T>();
+            if (context == null)
+            {
+                throw new ArgumentNullException("context");
+            }
+            else
+            {
+                this._context = context;
+                this._dbSet = context.Set<T>();
+            }
         }
 
         public virtual T GetByID(int id)

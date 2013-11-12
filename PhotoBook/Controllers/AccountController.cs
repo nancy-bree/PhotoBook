@@ -17,7 +17,12 @@ namespace PhotoBook.Web.Controllers
     [Authorize]
     public class AccountController : Controller
     {
-        private IUnitOfWork unitOfWork = new UnitOfWork();
+        private IUnitOfWork unitOfWork = null;
+
+        public AccountController(IUnitOfWork _unitOfWork)
+        {
+            this.unitOfWork = _unitOfWork;
+        }
 
         //
         // GET: /Account/Login

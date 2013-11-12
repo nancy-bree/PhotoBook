@@ -1,4 +1,5 @@
-﻿using System;
+﻿using PhotoBook.Entities;
+using System;
 
 namespace PhotoBook.DAL
 {

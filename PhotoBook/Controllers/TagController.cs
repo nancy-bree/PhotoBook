@@ -14,7 +14,13 @@ namespace PhotoBook.Controllers
 {
     public class TagController : Controller
     {
-        private IUnitOfWork unitOfWork = new UnitOfWork();
+        private IUnitOfWork unitOfWork = null;
+
+        public TagController(IUnitOfWork _unitOfWork)
+        {
+            this.unitOfWork = _unitOfWork;
+        }
+
         //
         // GET: /Tag/
 

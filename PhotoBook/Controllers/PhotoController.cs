@@ -18,7 +18,12 @@ namespace PhotoBook.Controllers
     [HandleError]
     public class PhotoController : Controller
     {
-        private IUnitOfWork unitOfWork = new UnitOfWork();
+        private IUnitOfWork unitOfWork = null;
+
+        public PhotoController(IUnitOfWork _unitOfWork)
+        {
+            this.unitOfWork = _unitOfWork;
+        }
 
         public ActionResult Slideshow(string type, int id = 1)
         {
