@@ -58,5 +58,14 @@ namespace PhotoBook.Properties {
                 return ((int)(this["ThumbnailWidth"]));
             }
         }
+        
+        [global::System.Configuration.ApplicationScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("no_image.gif")]
+        public string NoCover {
+            get {
+                return ((string)(this["NoCover"]));
+            }
+        }
     }
 }

@@ -43,11 +43,19 @@ namespace PhotoBook.Web.Controllers
         {
             List<AlbumViewModel> albumList = new List<AlbumViewModel>();
             var users = unitOfWork.UserRepository.Get();
+            string cover;
             foreach (var user in users)
             {
-                Random random = new Random();
-                int toSkip = random.Next(0, user.Photos.Count);
-                var cover = user.Photos.Skip(toSkip).Take(1).First().Filename;
+                if (user.Photos.Count == 0)
+                {
+                    cover = Settings.Default.NoCover;
+                }
+                else
+                {
+                    Random random = new Random();
+                    int toSkip = random.Next(0, user.Photos.Count);
+                    cover = user.Photos.Skip(toSkip).Take(1).First().Filename;
+                }
                 albumList.Add(new AlbumViewModel() { ID = user.ID, Count = user.Photos.Count, Cover = cover, Username = user.UserName });
             }
             return View(albumList.ToPagedList(page, Settings.Default.PhotosPerPage));

@@ -14,5 +14,8 @@
     <Setting Name="ThumbnailWidth" Type="System.Int32" Scope="Application">
       <Value Profile="(Default)">201</Value>
     </Setting>
+    <Setting Name="NoCover" Type="System.String" Scope="Application">
+      <Value Profile="(Default)">no_image.gif</Value>
+    </Setting>
   </Settings>
 </SettingsFile>

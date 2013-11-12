@@ -77,7 +77,8 @@ namespace PhotoBook.Models
         public string UserName { get; set; }
 
         [Required]
-        [DataType(DataType.EmailAddress, ErrorMessage = "Invalid email address.")]
+        //[DataType(DataType.EmailAddress, ErrorMessage = "Invalid email address.")]
+        [EmailAddress(ErrorMessage = "Invalid Email Address")]
         [Display(Name = "Email")]
         public string Email { get; set; }
 
