@@ -4,7 +4,7 @@ using System.ComponentModel.DataAnnotations;
 namespace PhotoBook.Entities
 {
     /// <summary>
-    /// 
+    /// Describes a Tag entity.
     /// </summary>
     public class Tag
     {

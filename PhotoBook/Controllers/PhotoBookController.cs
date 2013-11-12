@@ -15,7 +15,7 @@ using PhotoBook.Services;
 
 namespace PhotoBook.Web.Controllers
 {
-    //[HandleError]
+    [HandleError]
     public class PhotoBookController : Controller
     {
         private IUnitOfWork unitOfWork = null;
@@ -37,12 +37,18 @@ namespace PhotoBook.Web.Controllers
             return View(model);
         }
 
+        //
+        // GET: /PhotoBook/Photos
+
         public ActionResult Photos(int id = 1, int page = 1)
         {
             ViewBag.UserID = id;
             var photos = unitOfWork.UserRepository.GetByID(id).Photos;
             return View(photos.ToPagedList(page, Settings.Default.PhotosPerPage));
         }
+
+        //
+        // GET: /PhotoBook/UserAlbums
 
         public ActionResult UserAlbum(int page = 1)
         {
@@ -61,20 +67,23 @@ namespace PhotoBook.Web.Controllers
                     int toSkip = random.Next(0, user.Photos.Count);
                     cover = user.Photos.Skip(toSkip).Take(1).First().Filename;
                 }
-                albumList.Add(new AlbumViewModel() { ID = user.ID, Count = user.Photos.Count, Cover = cover, Username = user.UserName });
+                albumList.Add(new AlbumViewModel() 
+                {ID = user.ID, Count = user.Photos.Count, Cover = cover, Username = user.UserName });
             }
             return View(albumList.ToPagedList(page, Settings.Default.PhotosPerPage));
         }
 
+        //
+        // POST: /PhotoBook/AjaxVote
+
         [HttpPost]
         public int AjaxVote(int photoid, string action)
         {
-            // check if already voted, if found then return
-            //if () {return; }
             var photo = unitOfWork.PhotoRepository.GetByID(photoid);
-            if (photo.UserID == WebSecurity.CurrentUserId) { return unitOfWork.RatingRepository.GetPhotoRating(photoid); }  // do not allow vote for own photo
-
-
+            if (photo.UserID == WebSecurity.CurrentUserId) 
+            {
+                return unitOfWork.RatingRepository.GetPhotoRating(photoid);
+            }
             var rating = unitOfWork.RatingRepository.GetRatingInfo(photoid, WebSecurity.CurrentUserId);
             if (rating == null)
             {
@@ -96,11 +105,8 @@ namespace PhotoBook.Web.Controllers
             }
             else 
             {
-                // if clicked the same item then do nothing
                 if ((rating.Like == 1 && action == "up") || (rating.Dislike == 1 && action == "down"))
                 {
-                    //unitOfWork.RatingRepository.Delete(rating);
-                    //unitOfWork.Save();
                     return unitOfWork.RatingRepository.GetPhotoRating(photoid);
                 }
                 else
@@ -110,8 +116,7 @@ namespace PhotoBook.Web.Controllers
                     unitOfWork.RatingRepository.Update(rating);
                     unitOfWork.Save();
                 }
-            }    // if already voted
-
+            }
             return unitOfWork.RatingRepository.GetPhotoRating(photoid);
         }
     }

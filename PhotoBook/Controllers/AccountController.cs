@@ -55,8 +55,6 @@ namespace PhotoBook.Web.Controllers
         //
         // POST: /Account/LogOff
 
-        //[HttpPost]
-        //[ValidateAntiForgeryToken]
         public ActionResult LogOff()
         {
             WebSecurity.Logout();
@@ -106,11 +104,17 @@ namespace PhotoBook.Web.Controllers
             return View(model);
         }
 
+        //
+        // GET: /Account/RegisterStepTwo
+
         [AllowAnonymous]
         public ActionResult RegisterStepTwo()
         {
             return View();
         }
+
+        //
+        // GET: /Account/RegisterConfirmation
 
         [AllowAnonymous]
         public ActionResult RegisterConfirmation(string Id)
@@ -122,11 +126,17 @@ namespace PhotoBook.Web.Controllers
             return RedirectToAction("ConfirmationFailure");
         }
 
+        //
+        // GET: /Account/ConfirmationSuccess
+
         [AllowAnonymous]
         public ActionResult ConfirmationSuccess()
         {
             return View();
         }
+
+        //
+        // GET: /Account/ConfirmationFailure
 
         [AllowAnonymous]
         public ActionResult ConfirmationFailure()

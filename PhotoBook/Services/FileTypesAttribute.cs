@@ -6,6 +6,9 @@ using System.Web;
 
 namespace PhotoBook.Services
 {
+    /// <summary>
+    /// Available file types to upload.
+    /// </summary>
     public class FileTypesAttribute : ValidationAttribute
     {
         private readonly List<string> _types;

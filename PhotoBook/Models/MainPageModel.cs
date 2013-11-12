@@ -1,13 +1,14 @@
 ﻿using PhotoBook.Entities;
-using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Web;
 using PagedList;
 using PhotoBook.Properties;
 
 namespace PhotoBook.Models
 {
+    /// <summary>
+    /// 
+    /// </summary>
     public class MainPageModel
     {
         public IOrderedEnumerable<Tag> TagCloud { get; set; }

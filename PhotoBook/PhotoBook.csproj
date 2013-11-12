@@ -363,6 +363,7 @@
     <Content Include="Views\Shared\_PopularPhotos.cshtml" />
     <Content Include="Views\Shared\_DeleteSuccessful.cshtml" />
     <Content Include="Views\Shared\_DeleteUnsuccessful.cshtml" />
+    <Content Include="Views\Shared\_PhotoList.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

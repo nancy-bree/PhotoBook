@@ -7,8 +7,16 @@ using System.Text.RegularExpressions;
 
 namespace PhotoBook.Services
 {
+    /// <summary>
+    /// Defines all operations with tags.
+    /// </summary>
     public static class TagService
     {
+        /// <summary>
+        /// Gets list of tags from comma separated string.
+        /// </summary>
+        /// <param name="tags">Comma separated string of tags.</param>
+        /// <returns>List of tag names.</returns>
         public static List<string> SplitTags(string tags)
         {
             var list = new List<string>(tags.Trim().Split(','));
@@ -16,6 +24,12 @@ namespace PhotoBook.Services
             return list;
         }
 
+        /// <summary>
+        /// Defines CSS class name for tag cloud.
+        /// </summary>
+        /// <param name="tag">A number of photos related to tag.</param>
+        /// <param name="photos">A number of all photos.</param>
+        /// <returns>CSS class name.</returns>
         public static string GetTagClass(int tag, int photos)
         {
             var result = (tag * 100) / photos;

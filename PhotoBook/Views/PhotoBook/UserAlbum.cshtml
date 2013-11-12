@@ -23,7 +23,9 @@
                     <em class="username-field">@item.Username</em>
                 </div>
                 <div class="image-gallery">
-                    <a href="@Url.Action("Photos", "PhotoBook", new { id = item.ID})"><img src="@Url.Content(String.Concat("~/_uploads/", "_thumbnail_", item.Cover))" alt="photo" /></a>
+                    <a href="@Url.Action("Photos", "PhotoBook", new { id = item.ID})">
+                        <img src="@Url.Content(String.Concat("~/_uploads/", "_thumbnail_", item.Cover))" alt="photo" />
+                    </a>
                 </div>
                 <div class="tags-gallery">
                     <em>Photos: @item.Count</em>
@@ -33,4 +35,7 @@
     }
 }
 </div>
-@Html.PagedListPager(Model, page => Url.Action("Photos", new RouteValueDictionary {{"id", ViewBag.UserID}, {"page", page }}), PagedListRenderOptions.PageNumbersOnly)
+@Html.PagedListPager(Model
+                    , page => Url.Action("Photos"
+                    , new RouteValueDictionary {{"id", ViewBag.UserID}, {"page", page }})
+                    , PagedListRenderOptions.PageNumbersOnly)

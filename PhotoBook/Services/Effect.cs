@@ -1,4 +1,7 @@
-﻿public enum Effect : int
+﻿/// <summary>
+/// Defines available photo effects.
+/// </summary>
+public enum Effect : int
 {
     None = 0,
     Sepia = 1,

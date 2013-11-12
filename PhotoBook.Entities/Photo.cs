@@ -4,7 +4,7 @@ using System.ComponentModel.DataAnnotations;
 namespace PhotoBook.Entities
 {
     /// <summary>
-    /// 
+    /// Describes a Photo entity.
     /// </summary>
     public class Photo
     {

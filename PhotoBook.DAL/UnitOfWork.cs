@@ -3,6 +3,9 @@ using System;
 
 namespace PhotoBook.DAL
 {
+    /// <summary>
+    /// 
+    /// </summary>
     public class UnitOfWork : IUnitOfWork
     {
         #region Private Fields

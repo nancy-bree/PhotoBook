@@ -4,6 +4,9 @@ using System.Drawing;
 
 namespace PhotoBook.Services
 {
+    /// <summary>
+    /// 
+    /// </summary>
     public static class PhotoEditor
     {
         public static Bitmap ToSepia(string photoPath, int depth)

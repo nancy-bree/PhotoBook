@@ -13,39 +13,42 @@
               {
                   <ul class="nav navbar-nav">
                       <li>@Html.ActionLink("Albums", "UserAlbum", "PhotoBook")</li>
-                      <li>@Html.ActionLink("My Photos", "Photos", "PhotoBook", new { id = (int)@Membership.GetUser().ProviderUserKey}, null)</li>
+                      <li>@Html.ActionLink("My Photos", "Photos", "PhotoBook", 
+                                            new { id = (int)@Membership.GetUser().ProviderUserKey}, null)
+                      </li>
                       <li>@Html.ActionLink("Upload", "Upload", "Photo")</li>
                   </ul>
-            @*@Html.Partial("~/Views/Shared/_SearchBar.cshtml")*@
-              @*<ul class="nav navbar-nav">
-                <li>@Html.ActionLink("Вход", "LogOn", "Account")</li>
-                 <li>@Html.ActionLink("Регистрация", "Register", "Account")</li>
-            </ul>*@
                   <ul class="nav navbar-nav navbar-right">
                     <li>
                         <a href="@Url.Action("Manage", "Account")">
-                            @User.Identity.Name&nbsp;<span class="glyphicon glyphicon-pencil" style="font-size:12pt;" />
+                            <span class="glyphicon glyphicon-pencil" style="font-size:12pt;"></span>
+                            &nbsp;@User.Identity.Name
                         </a>
                     </li>
                     <li>
                         <a href="@Url.Action("LogOff", "Account")">
-                            Log off&nbsp;<span class="glyphicon glyphicon-log-out" style="font-size:12pt;"/>
+                            <span class="glyphicon glyphicon-log-out" style="font-size:12pt;"></span>
+                            &nbsp;Log off
                         </a>
                     </li>
                 </ul>
-              } else {
+              } 
+              else 
+              {
                   <ul class="nav navbar-nav">
                       <li>@Html.ActionLink("Albums", "UserAlbum", "PhotoBook")</li>
                   </ul>
                 <ul class="nav navbar-nav navbar-right">
                     <li>
                         <a href="@Url.Action("Register", "Account")">
-                            Register&nbsp;<span class="glyphicon glyphicon-check" style="font-size:12pt;"/>
+                            <span class="glyphicon glyphicon-check" style="font-size:12pt;"></span>&nbsp;
+                            Register
                         </a>
                     </li>
                     <li>
                         <a href="@Url.Action("Login", "Account")">
-                            Log in&nbsp;<span class="glyphicon glyphicon-log-in" style="font-size:12pt;"/>
+                            <span class="glyphicon glyphicon-log-in" style="font-size:12pt;"></span>&nbsp;
+                            Log in
                         </a>
                     </li>
                 </ul>

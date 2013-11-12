@@ -26,10 +26,12 @@ namespace PhotoBook.Controllers
 
         public ActionResult Index(int id = 1, int page = 1)
         {
-            //ViewBag.TagID = id;
             ViewBag.Tag = unitOfWork.TagRepository.GetByID(id);
             return View(unitOfWork.PhotoRepository.Get().Where(x => x.Tags.Any(y => y.ID == id)).ToPagedList(page, Settings.Default.PhotosPerPage));
         }
+
+        //
+        // GET: /Tag/GetTags
 
         public JsonResult GetTags(string term)
         {

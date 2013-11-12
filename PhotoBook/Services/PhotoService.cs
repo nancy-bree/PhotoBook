@@ -6,8 +6,16 @@ using PhotoBook.Properties;
 
 namespace PhotoBook.Services
 {
+    /// <summary>
+    /// Defines all operations with photos.
+    /// </summary>
     public static class PhotoService
     {
+        /// <summary>
+        /// Returns file path of the photo.
+        /// </summary>
+        /// <param name="file">File to save.</param>
+        /// <returns>File path.</returns>
         public static string SavePhoto(HttpPostedFileBase file)
         {
             string mainName = Guid.NewGuid().ToString();
@@ -19,6 +27,11 @@ namespace PhotoBook.Services
             return filename;
         }
 
+        /// <summary>
+        /// Applies photo effect.
+        /// </summary>
+        /// <param name="effect">Effect type.</param>
+        /// <param name="filename">Filename.</param>
         public static void ApplyEffect(Effect effect, string filename)
         {
             string tmpFilename = "_tmp_" + filename;
@@ -102,7 +115,6 @@ namespace PhotoBook.Services
 
             if (File.Exists(tmpPath))
             {
-                //File.Delete(sourcePath);
                 File.Move(tmpPath, sourcePath);
                 File.Delete(tmpPath);
                 return 1;

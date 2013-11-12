@@ -5,28 +5,28 @@
 }
 
 <div class="col-md-6">
-<div class="image-detail">
-    <div class="image-single">
-        <img src="@Url.Content(String.Concat("~/_uploads/", Model.Filename))" alt="photo" class="centered" />
+    <div class="image-detail">
+        <div class="image-single">
+            <img src="@Url.Content(String.Concat("~/_uploads/", Model.Filename))" alt="photo" class="centered" />
+        </div>
     </div>
 </div>
-</div>
 <div class="col-md-6" style="margin-top: 10px;">
-<div class="image-description">
-    <h4>Description</h4>
-    <p>@Html.DisplayFor(x => x.Description)</p>
-</div>
-<div class="image-description">
-    <h4>Tags</h4>
-    @if (Model.Tags.Count > 0)
-    {
-        <p><em>@Html.Raw(String.Join(", ", Model.Tags.Select(tag => @Html.ActionLink(tag.Name, "Index", "Tag", new { id = tag.ID}, null).ToHtmlString()).ToArray()))</em></p>
-    }
-    else
-    {
-        <p><i>None</i></p>
-    }
-</div>
+    <div class="image-description">
+        <h4>Description</h4>
+        <p>@Html.DisplayFor(x => x.Description)</p>
+    </div>
+    <div class="image-description">
+        <h4>Tags</h4>
+        @if (Model.Tags.Count > 0)
+        {
+            <p><em>@Html.Raw(String.Join(", ", Model.Tags.Select(tag => @Html.ActionLink(tag.Name, "Index", "Tag", new { id = tag.ID}, null).ToHtmlString()).ToArray()))</em></p>
+        }
+        else
+        {
+            <p><i>None</i></p>
+        }
+    </div>
     @if (Model.UserID == WebSecurity.CurrentUserId)
     {
         <div>
@@ -34,5 +34,4 @@
             @Html.ActionLink("Delete", "Delete", "Photo", new { id = Model.ID }, new { @class="btn btn-primary", role="button"})
         </div>
     }
-    </div>
-
+</div>

@@ -25,6 +25,9 @@ namespace PhotoBook.Controllers
             this.unitOfWork = _unitOfWork;
         }
 
+        //
+        // GET: /Photo/Slideshow
+
         public ActionResult Slideshow(string type, int id = 1)
         {
             List<Photo> list;
@@ -44,11 +47,17 @@ namespace PhotoBook.Controllers
             return View(list);
         }
 
+        //
+        // GET: /Photo/Upload
+
         [Authorize]
         public ActionResult Upload()
         {
             return View();
         }
+
+        //
+        // POST: /Photo/Upload
 
         [HttpPost]
         [ValidateAntiForgeryToken]
@@ -93,11 +102,17 @@ namespace PhotoBook.Controllers
             return View(model);
         }
 
+        //
+        // GET: /Photo/Details
+
         public ActionResult Details(int id = 1)
         {
             Photo photo = unitOfWork.PhotoRepository.GetByID(id);
             return View(photo);
         }
+
+        //
+        // GET: /Photo/Edit
 
         [Authorize]
         public ActionResult Edit(int id)
@@ -125,6 +140,9 @@ namespace PhotoBook.Controllers
                 return RedirectToAction("Http403", "Error");
             }
         }
+
+        //
+        // POST: /Photo/Edit
 
         [HttpPost]
         [ValidateAntiForgeryToken]
@@ -178,6 +196,9 @@ namespace PhotoBook.Controllers
             return View(model);
         }
 
+        //
+        // GET: /Photo/Delete
+
         [Authorize]
         public ActionResult Delete(int id)
         {
@@ -198,7 +219,6 @@ namespace PhotoBook.Controllers
                         }
                     }
                     return View("~/Views/Shared/_DeleteSuccessful.cshtml");
-                    //throw new System.IO.IOException();    // only to test IOExeption
                 }
                 catch (System.IO.IOException)
                 {

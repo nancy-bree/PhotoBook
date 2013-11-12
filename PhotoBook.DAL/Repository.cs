@@ -7,6 +7,10 @@ using System.Data.Entity;
 
 namespace PhotoBook.DAL
 {
+    /// <summary>
+    /// Defines class for CRUD operations for entity.
+    /// </summary>
+    /// <typeparam name="T">Type of entity.</typeparam>
     public class Repository<T> where T : class
     {
         internal PhotoBookContext _context;
@@ -25,29 +29,24 @@ namespace PhotoBook.DAL
             }
         }
 
+        /// <summary>
+        /// Read an entity from database.
+        /// </summary>
+        /// <param name="id">Entity ID.</param>
+        /// <returns>Entity.</returns>
         public virtual T GetByID(int id)
         {
             return _dbSet.Find(id);
         }
 
-        public virtual IEnumerable<T> Get(
-            Expression<Func<T, bool>> filter = null,
-            Func<IQueryable<T>, IOrderedQueryable<T>> orderBy = null,
-            string includeProperties = "")
+        /// <summary>
+        /// Get all entities of type <typeparamref name="T"/> from database.
+        /// </summary>
+        /// <param name="orderBy"></param>
+        /// <returns>Collection of entities.</returns>
+        public virtual IEnumerable<T> Get(Func<IQueryable<T>, IOrderedQueryable<T>> orderBy = null)
         {
             IQueryable<T> query = _dbSet;
-
-            if (filter != null)
-            {
-                query = query.Where(filter);
-            }
-
-            foreach (var includeProperty in includeProperties.Split
-                (new char[] { ',' }, StringSplitOptions.RemoveEmptyEntries))
-            {
-                query = query.Include(includeProperty);
-            }
-
             if (orderBy != null)
             {
                 return orderBy(query).ToList();
@@ -58,23 +57,39 @@ namespace PhotoBook.DAL
             }
         }
 
+        /// <summary>
+        /// Insert entity into database.
+        /// </summary>
+        /// <param name="entity">Entity to insert.</param>
         public virtual void Insert(T entity)
         {
             _dbSet.Add(entity);
         }
 
+        /// <summary>
+        /// Update entity in database.
+        /// </summary>
+        /// <param name="entity">Entity to update.</param>
         public virtual void Update(T entity)
         {
             _dbSet.Attach(entity);
             _context.Entry(entity).State = EntityState.Modified;
         }
 
+        /// <summary>
+        /// Delete entity from database by its ID.
+        /// </summary>
+        /// <param name="id">Entity ID.</param>
         public virtual void Delete(int id)
         {
             T entity = _dbSet.Find(id);
             Delete(entity);
         }
 
+        /// <summary>
+        /// Delete entity from database.
+        /// </summary>
+        /// <param name="entity">Entity to delete.</param>
         public virtual void Delete(T entity)
         {
             if (_context.Entry(entity).State == EntityState.Detached)

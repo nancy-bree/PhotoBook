@@ -3,7 +3,7 @@
 namespace PhotoBook.Entities
 {
     /// <summary>
-    /// 
+    /// Describes a Rating entity.
     /// </summary>
     public class Rating
     {

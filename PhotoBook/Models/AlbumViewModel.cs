@@ -1,10 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Web;
-
-namespace PhotoBook.Models
+﻿namespace PhotoBook.Models
 {
+    /// <summary>
+    /// 
+    /// </summary>
     public class AlbumViewModel
     {
         public int ID { get; set; }

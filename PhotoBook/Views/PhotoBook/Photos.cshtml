@@ -4,7 +4,6 @@
 @{
     ViewBag.Title = "Photos";
 }
-@{ PhotoBook.DAL.UnitOfWork unitOfWork = new PhotoBook.DAL.UnitOfWork(); }
 <div class="page-header center">
   <h1>@ViewBag.Title
       @if (Model.Count > 0)
@@ -14,122 +13,9 @@
   </h1>
 </div>
 
-<div class="row">
-@{
-    int index = 0;
-    foreach(var item in Model)
-    {
-        int rating = unitOfWork.RatingRepository.GetPhotoRating(item.ID);
-        if (index % 3 == 0)
-        {
-            @:</div><div class="row">
-        }
-            <div class="col-md-3 gallery">
-                @if ((User.Identity.IsAuthenticated) && (item.UserID != WebSecurity.CurrentUserId))
-                {
-                    <div class="menu-gallery" data-photoid="@item.ID" data-score="@rating" data-userid="@item.UserID" >
-                        <div class="vote-span"><!-- voting-->
-                            <div class="vote" data-action="up" title="Vote up">
-                                <span class="glyphicon glyphicon-arrow-up"/>
-                            </div><!--vote up-->
-                            <div class="vote-score">@rating</div>
-                            <div class="vote" data-action="down" title="Vote down">
-                                <span class="glyphicon glyphicon-arrow-down"/>
-                            </div><!--vote down-->
-                      </div>
-                </div>
-                }
-                else
-                {
-                    <div class="menu-gallery" data-photoid="@item.ID" data-score="@rating" data-userid="@item.UserID" >
-                        <div class="vote-span"><!-- voting-->
-                            <div class="vote-score">@rating</div>
-                        </div>
-                    </div>
-                }
-                <div class="image-gallery">
-                    <a href="@Url.Action("Details", "Photo", new { id = item.ID})"><img src="@Url.Content(String.Concat("~/_uploads/", "_thumbnail_", item.Filename))" alt="@item.Description" /></a>
-                </div>
-                <div class="tags-gallery">
-                    <span class="glyphicon glyphicon-tags" /> Tags: 
-                    @if (item.Tags.Count == 0)
-                    {
-                        <em>none</em>
-                    }
-                    else
-                    {
-                        <em>@Html.Raw(String.Join(", ", item.Tags.Select(tag => @Html.ActionLink(tag.Name, "Index", "Tag", new { id = tag.ID}, null).ToHtmlString()).ToArray()))</em>
-                    }
-                </div>
-            </div>
-        index++;
-    }
-}
-</div>
-@Html.PagedListPager(Model, page => Url.Action("Photos", new RouteValueDictionary {{"id", ViewBag.UserID}, {"page", page }}), PagedListRenderOptions.PageNumbersOnly)
-@*<script src="@Url.Content("~/Scripts/coffee-script.js")"></script>
+@{ Html.RenderPartial("~/Views/Shared/_PhotoList.cshtml", Model); }
+@Html.PagedListPager(Model
+                    , page => Url.Action("Photos"
+                    , new RouteValueDictionary {{"id", ViewBag.UserID}, {"page", page }})
+                    , PagedListRenderOptions.PageNumbersOnly)
 
-<script type="text/coffeescript">
-    $(document).ready ->
-  $.ajaxSetup
-    url: "/PhotoBook/AjaxVote"
-    type: "POST"
-    cache: "false"
-
-  $(".vote").click ->
-    self = $(this)
-    action = self.data("action")
-    parent = self.parent().parent()
-    photoid = parent.data("photoid")
-    score = parent.data("score")
-    userid = parent.data("userid")
-    if action is "up"
-      $.ajax
-        data:
-          photoid: photoid
-          action: "up"
-
-        success: (result) ->
-          parent.find(".vote-score").html result
-
-    else if action is "down"
-      $.ajax
-        data:
-          photoid: photoid
-          action: "down"
-
-        success: (result) ->
-          parent.find(".vote-score").html result
-</script>*@
-
-<script>
-    $(document).ready(function () {
-        $.ajaxSetup({
-            url: '/PhotoBook/AjaxVote',
-            type: 'POST',
-            cache: 'false'
-        });
-
-        $('.vote').click(function () {
-            var self = $(this);
-            var action = self.data('action');
-            var parent = self.parent().parent();
-            var photoid = parent.data('photoid');
-            var score = parent.data('score');
-            var userid = parent.data('userid');
-
-            if (action == 'up') {
-                $.ajax({
-                    data: { 'photoid': photoid, 'action': 'up' },
-                    success: function (result) { parent.find('.vote-score').html(result); }
-                });
-            }
-            else if (action == 'down') {
-                $.ajax({
-                    data: { 'photoid': photoid, 'action': 'down' },
-                    success: function (result) { parent.find('.vote-score').html(result); }
-                });
-            };
-        });
-    });
-</script>

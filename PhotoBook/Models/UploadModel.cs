@@ -1,10 +1,12 @@
 ﻿using System.Web;
 using System.ComponentModel.DataAnnotations;
-using System.Collections.Generic;
 using PhotoBook.Services;
 
 namespace PhotoBook.Models
 {
+    /// <summary>
+    /// 
+    /// </summary>
     public class UploadModel
     {
         [Required]

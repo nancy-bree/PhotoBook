@@ -5,6 +5,9 @@ using System.Data.Entity.ModelConfiguration.Conventions;
 
 namespace PhotoBook.DAL
 {
+    /// <summary>
+    /// Defines EF DbContext for Application
+    /// </summary>
     public class PhotoBookContext : DbContext
     {
         public DbSet<Photo> Photo { get; set; }

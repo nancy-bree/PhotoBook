@@ -4,6 +4,9 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace PhotoBook.Entities
 {
+    /// <summary>
+    /// Describes a User entity.
+    /// </summary>
     public class User
     {
         [Key]

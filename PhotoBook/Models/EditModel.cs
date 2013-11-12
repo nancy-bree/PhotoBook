@@ -1,11 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
-using System.Linq;
-using System.Web;
+﻿using System.ComponentModel.DataAnnotations;
 
 namespace PhotoBook.Models
 {
+    /// <summary>
+    /// 
+    /// </summary>
     public class EditModel
     {
         public int ID { get; set; }

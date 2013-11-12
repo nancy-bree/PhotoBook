@@ -3,6 +3,9 @@ using System.Web;
 
 namespace PhotoBook.Services
 {
+    /// <summary>
+    /// Maximum file size to upload.
+    /// </summary>
     public class FileSizeAttribute : ValidationAttribute
     {
         private readonly int _maxSize;
