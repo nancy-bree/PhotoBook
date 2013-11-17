@@ -43,11 +43,7 @@ namespace PhotoBook.DAL
         public virtual IEnumerable<T> Get(Func<IQueryable<T>, IOrderedQueryable<T>> orderBy = null)
         {
             IQueryable<T> query = _dbSet;
-            if (orderBy != null)
-            {
-                return orderBy(query).ToList();
-            }
-            return query.ToList();
+            return orderBy != null ? orderBy(query).ToList() : query.ToList();
         }
 
         /// <summary>

@@ -15,7 +15,7 @@ namespace PhotoBook.Controllers
     [HandleError]
     public class PhotoBookController : Controller
     {
-        private IUnitOfWork unitOfWork = null;
+        private IUnitOfWork unitOfWork;
 
         public PhotoBookController(IUnitOfWork _unitOfWork)
         {
@@ -51,24 +51,7 @@ namespace PhotoBook.Controllers
         {
             var albumList = new List<AlbumViewModel>();
             var users = unitOfWork.UserRepository.Get();
-            foreach (var user in users)
-            {
-                string cover;
-                if (user.Photos.Count == 0)
-                {
-                    cover = Settings.Default.NoCover;
-                }
-                else
-                {
-                    var random = new Random();
-                    int toSkip = random.Next(0, user.Photos.Count);
-                    cover = user.Photos.Skip(toSkip).Take(1).First().Filename;
-                }
-                albumList.Add(new AlbumViewModel
-                {
-                    ID = user.ID, Count = user.Photos.Count, Cover = cover, Username = user.UserName
-                });
-            }
+            FillAlbumModel(users, albumList);
             return View(albumList.ToPagedList(page, Settings.Default.PhotosPerPage));
         }
 
@@ -86,34 +69,85 @@ namespace PhotoBook.Controllers
             var rating = unitOfWork.RatingRepository.GetRatingInfo(photoid, WebSecurity.CurrentUserId);
             if (rating == null)
             {
-                rating = new Rating
-                {
-                    PhotoID = photoid,
-                    UserID = WebSecurity.CurrentUserId
-                };
-                if (action == "up")
-                {
-                    rating.Like = 1;
-                }
-                if (action == "down")
-                {
-                    rating.Dislike = 1;
-                }
-                unitOfWork.RatingRepository.Insert(rating);
-                unitOfWork.Save();
+                AddVote(photoid, action);
             }
-            else 
+            else
             {
                 if ((rating.Like == 1 && action == "up") || (rating.Dislike == 1 && action == "down"))
                 {
+                    unitOfWork.RatingRepository.Delete(rating);
+                    unitOfWork.Save();
                     return unitOfWork.RatingRepository.GetPhotoRating(photoid);
                 }
-                if (action == "up") { rating.Like = 1; rating.Dislike = 0; }
-                if (action == "down") { rating.Dislike = 1; rating.Like = 0; }
-                unitOfWork.RatingRepository.Update(rating);
-                unitOfWork.Save();
+                ChangeVote(action, rating);
             }
             return unitOfWork.RatingRepository.GetPhotoRating(photoid);
+        }
+
+        private static void FillAlbumModel(IEnumerable<User> users, List<AlbumViewModel> albumList)
+        {
+            foreach (var user in users)
+            {
+                var cover = SetCover(user);
+                albumList.Add(new AlbumViewModel
+                {
+                    ID = user.ID,
+                    Count = user.Photos.Count,
+                    Cover = cover,
+                    Username = user.UserName
+                });
+            }
+        }
+
+        private static string SetCover(User user)
+        {
+            string cover;
+            if (user.Photos.Count == 0)
+            {
+                cover = Settings.Default.NoCover;
+            }
+            else
+            {
+                var random = new Random();
+                var toSkip = random.Next(0, user.Photos.Count);
+                cover = user.Photos.Skip(toSkip).Take(1).First().Filename;
+            }
+            return cover;
+        }
+
+        private void ChangeVote(string action, Rating rating)
+        {
+            if (action == "up")
+            {
+                rating.Like = 1;
+                rating.Dislike = 0;
+            }
+            if (action == "down")
+            {
+                rating.Dislike = 1;
+                rating.Like = 0;
+            }
+            unitOfWork.RatingRepository.Update(rating);
+            unitOfWork.Save();
+        }
+
+        private void AddVote(int photoid, string action)
+        {
+            var rating = new Rating
+            {
+                PhotoID = photoid,
+                UserID = WebSecurity.CurrentUserId
+            };
+            if (action == "up")
+            {
+                rating.Like = 1;
+            }
+            if (action == "down")
+            {
+                rating.Dislike = 1;
+            }
+            unitOfWork.RatingRepository.Insert(rating);
+            unitOfWork.Save();
         }
     }
 }

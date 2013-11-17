@@ -16,7 +16,7 @@ namespace PhotoBook.Controllers
     [Authorize]
     public class AccountController : Controller
     {
-        private IUnitOfWork unitOfWork = null;
+        private IUnitOfWork unitOfWork;
 
         public AccountController(IUnitOfWork _unitOfWork)
         {

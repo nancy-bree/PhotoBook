@@ -6,9 +6,10 @@ using System.Web.Mvc;
 
 namespace PhotoBook.Controllers
 {
+    [HandleError]
     public class TagController : Controller
     {
-        private IUnitOfWork unitOfWork = null;
+        private IUnitOfWork unitOfWork;
 
         public TagController(IUnitOfWork _unitOfWork)
         {

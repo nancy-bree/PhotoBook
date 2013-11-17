@@ -8,7 +8,7 @@ namespace PhotoBook.DAL
     public class UnitOfWork : IUnitOfWork
     {
         #region Private Fields
-        private PhotoBookContext _context = new PhotoBookContext();
+        private readonly PhotoBookContext _context = new PhotoBookContext();
 
         private PhotoRepository _photoRepository;
 

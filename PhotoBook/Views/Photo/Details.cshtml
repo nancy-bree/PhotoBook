@@ -5,19 +5,24 @@
 }
 
 <div class="col-md-6">
-    <div class="image-detail">
-        <div class="image-single">
-            <img src="@Url.Content(String.Concat("~/_uploads/", Model.Filename))" alt="photo" class="centered" />
-        </div>
+    <div class="thumbnail">
+        <img src="@Url.Content(String.Concat("~/_uploads/", Model.Filename))" alt="@Model.Description" />
     </div>
 </div>
 <div class="col-md-6" style="margin-top: 10px;">
-    <div class="image-description">
-        <h4>Description</h4>
-        <p>@Html.DisplayFor(x => x.Description)</p>
+    <div class="thumbnail">
+        <h4><b>Description</b></h4>
+        @if (!String.IsNullOrEmpty(Model.Description))
+        {
+            <p>@Html.DisplayFor(x => x.Description)</p>
+        }
+        else
+        {
+            <p><i>None</i></p>
+        }
     </div>
-    <div class="image-description">
-        <h4>Tags</h4>
+    <div class="thumbnail">
+        <h4><b>Tags</b></h4>
         @if (Model.Tags.Count > 0)
         {
             <p><em>@Html.Raw(String.Join(", ", Model.Tags.Select(tag => @Html.ActionLink(tag.Name, "Index", "Tag", new { id = tag.ID}, null).ToHtmlString()).ToArray()))</em></p>

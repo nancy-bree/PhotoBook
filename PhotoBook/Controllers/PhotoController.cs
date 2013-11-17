@@ -16,7 +16,7 @@ namespace PhotoBook.Controllers
     [HandleError]
     public class PhotoController : Controller
     {
-        private IUnitOfWork unitOfWork = null;
+        private IUnitOfWork unitOfWork;
 
         public PhotoController(IUnitOfWork _unitOfWork)
         {
@@ -65,33 +65,7 @@ namespace PhotoBook.Controllers
             {
                 if (ModelState.IsValid)
                 {
-                    var photo = new Photo
-                    {
-                        Description = model.Description,
-                        Filename = PhotoService.SavePhoto(model.Photo),
-                        UserID = (int) Membership.GetUser().ProviderUserKey
-                    };
-                    if (model.Tags != null)
-                    {
-                        IEnumerable<string> tags = TagService.SplitTags(model.Tags).Distinct();
-                        photo.Tags = new List<Tag>();
-                        foreach (var tag in tags)
-                        {
-                            var tmp = unitOfWork.TagRepository.GetTagByName(tag.Trim());
-                            if (tmp == null)
-                            {
-                                tmp = new Tag
-                                {
-                                    Name = tag.Trim()
-                                };
-                                unitOfWork.TagRepository.Insert(tmp);
-                                unitOfWork.Save();
-                            }
-                            photo.Tags.Add(tmp);
-                        }
-                    }
-                    unitOfWork.PhotoRepository.Insert(photo);
-                    unitOfWork.Save();
+                    UploadPhoto(model);
                     return RedirectToAction("Photos", "PhotoBook", new { id = WebSecurity.CurrentUserId});
                 }
             }
@@ -118,20 +92,17 @@ namespace PhotoBook.Controllers
         public ActionResult Edit(int id)
         {
             var photo = unitOfWork.PhotoRepository.GetByID(id);
-            if (photo.UserID == WebSecurity.CurrentUserId)
+            if (photo.UserID != WebSecurity.CurrentUserId) return RedirectToAction("Http403", "Error");
+            var model = new EditModel
             {
-                var model = new EditModel
-                {
-                    ID = photo.ID,
-                    Description = photo.Description,
-                    Photo = photo.Filename,
-                    Effect = (Effect)photo.Effect
-                };
-                var tags = photo.Tags.Select(item => item.Name).ToList();
-                model.Tags = String.Join(", ", tags);
-                return View(model);
-            }
-            return RedirectToAction("Http403", "Error");
+                ID = photo.ID,
+                Description = photo.Description,
+                Photo = photo.Filename,
+                Effect = (Effect)photo.Effect
+            };
+            var tags = photo.Tags.Select(item => item.Name).ToList();
+            model.Tags = String.Join(", ", tags);
+            return View(model);
         }
 
         //
@@ -156,22 +127,7 @@ namespace PhotoBook.Controllers
                     oldPhoto.Effect = (int)model.Effect;
                     if ((model.Tags != null) && !String.IsNullOrWhiteSpace(model.Tags))
                     {
-                        IEnumerable<string> tags = TagService.SplitTags(model.Tags).Distinct();
-                        oldPhoto.Tags.Clear();
-                        foreach (var tag in tags)
-                        {
-                            var tmp = unitOfWork.TagRepository.GetTagByName(tag.Trim());
-                            if (tmp == null)
-                            {
-                                tmp = new Tag
-                                {
-                                    Name = tag.Trim()
-                                };
-                                unitOfWork.TagRepository.Insert(tmp);
-                                unitOfWork.Save();
-                            }
-                            oldPhoto.Tags.Add(tmp);
-                        }
+                        SetTags(model.Tags, oldPhoto);
                     }
                     else
                     {
@@ -196,30 +152,76 @@ namespace PhotoBook.Controllers
         public ActionResult Delete(int id)
         {
             var photoToDelete = unitOfWork.PhotoRepository.GetByID(id);
-            if (photoToDelete.UserID == WebSecurity.CurrentUserId)
+            if (photoToDelete.UserID != WebSecurity.CurrentUserId) return RedirectToAction("Http403", "Error");
+            try
             {
-                try
+                DeletePhoto(id, photoToDelete);
+                return View("~/Views/Shared/_DeleteSuccessful.cshtml");
+            }
+            catch (System.IO.IOException)
+            {
+                ViewBag.PhotoID = photoToDelete.ID;
+                return View("~/Views/Shared/_DeleteUnsuccessful.cshtml");
+            }
+        }
+
+        private void DeletePhoto(int id, Photo photoToDelete)
+        {
+            unitOfWork.PhotoRepository.Delete(id);
+            unitOfWork.RatingRepository.DeletePhotoRating(id);
+            unitOfWork.Save();
+            string[] photos = System.IO.Directory.GetFiles(Server
+                .MapPath(Settings.Default.UserUploads), "*" + photoToDelete.Filename);
+            foreach (var photo in photos)
+            {
+                if (System.IO.File.Exists(photo))
                 {
-                    unitOfWork.PhotoRepository.Delete(id);
-                    unitOfWork.RatingRepository.DeletePhotoRating(id);
-                    unitOfWork.Save();
-                    string[] photos = System.IO.Directory.GetFiles(Server.MapPath(Settings.Default.UserUploads), "*" + photoToDelete.Filename);
-                    foreach (var photo in photos)
-                    {
-                        if (System.IO.File.Exists(photo))
-                        {
-                            System.IO.File.Delete(photo);
-                        }
-                    }
-                    return View("~/Views/Shared/_DeleteSuccessful.cshtml");
-                }
-                catch (System.IO.IOException)
-                {
-                    ViewBag.PhotoID = photoToDelete.ID;
-                    return View("~/Views/Shared/_DeleteUnsuccessful.cshtml");
+                    System.IO.File.Delete(photo);
                 }
             }
-            return RedirectToAction("Http403", "Error");
+        }
+
+        private void SetTags(string tagString, Photo photo)
+        {
+            IEnumerable<string> tags = TagService.SplitTags(tagString).Distinct();
+            if (photo.Tags != null)
+            {
+                photo.Tags.Clear();
+            }
+            else
+            {
+                photo.Tags = new List<Tag>();
+            }
+            foreach (var tag in tags)
+            {
+                var tmp = unitOfWork.TagRepository.GetTagByName(tag.Trim());
+                if (tmp == null)
+                {
+                    tmp = new Tag
+                    {
+                        Name = tag.Trim()
+                    };
+                    unitOfWork.TagRepository.Insert(tmp);
+                    unitOfWork.Save();
+                }
+                photo.Tags.Add(tmp);
+            }
+        }
+
+        private void UploadPhoto(UploadModel model)
+        {
+            var photo = new Photo
+            {
+                Description = model.Description,
+                Filename = PhotoService.SavePhoto(model.Photo),
+                UserID = WebSecurity.CurrentUserId
+            };
+            if (model.Tags != null)
+            {
+                SetTags(model.Tags, photo);
+            }
+            unitOfWork.PhotoRepository.Insert(photo);
+            unitOfWork.Save();
         }
     }
 }
