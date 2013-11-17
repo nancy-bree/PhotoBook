@@ -1,4 +1,5 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using PhotoBook.Services;
 
 namespace PhotoBook.Models
 {

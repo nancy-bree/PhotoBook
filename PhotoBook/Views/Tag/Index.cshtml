@@ -5,17 +5,24 @@
     ViewBag.Title = "Photos tagged '" + ViewBag.Tag.Name + "'";
 }
 <div class="page-header center">
-  <h1>@ViewBag.Title
-      @if (Model.Count > 0)
-      {
-          @:&nbsp;<small>@Html.ActionLink("View as a slideshow", "Slideshow", "Photo"
-                                        , new { type = "tag", id = ViewBag.Tag.ID }, null)</small>
-      }
-  </h1>
+    <h1>@ViewBag.Title
+        @if (Model.Count > 0)
+        {
+            @:&nbsp;<small>@Html.ActionLink("View as a slideshow", "Slideshow", "Photo"
+                               , new { type = "tag", id = ViewBag.Tag.ID }, null)</small>
+        }
+    </h1>
 </div>
-@{ Html.RenderPartial("~/Views/Shared/_PhotoList.cshtml", Model); }
+@if (Model.Count > 0)
+{
+    Html.RenderPartial("~/Views/Shared/_PhotoList.cshtml", Model);
 
-@Html.PagedListPager(Model
-                    , page => Url.Action("Photos"
-                    , new RouteValueDictionary {{"id", ViewBag.Tag.ID}, {"page", page }})
-                    , PagedListRenderOptions.PageNumbersOnly)
+    @Html.PagedListPager(Model
+        , page => Url.Action("Photos", "PhotoBook"
+            , new RouteValueDictionary {{"id", ViewBag.Tag.ID}, {"page", page}})
+        , PagedListRenderOptions.PageNumbersOnly)
+}
+else
+{
+    <h3 class="center">No photos found.</h3>
+}

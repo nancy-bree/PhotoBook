@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using PhotoBook.Entities;
 
@@ -30,13 +29,11 @@ namespace PhotoBook.DAL
         public void DeletePhotoTag(int photoId)
         {
             var photo = this.GetByID(photoId);
-            if (photo.Tags != null)
+            if (photo.Tags == null) return;
+            var query = GetPhotoTags(photoId);
+            foreach (var item in query)
             {
-                var query = GetPhotoTags(photoId);
-                foreach (var item in query)
-                {
-                    photo.Tags.Remove(item);
-                }
+                photo.Tags.Remove(item);
             }
         }
     }

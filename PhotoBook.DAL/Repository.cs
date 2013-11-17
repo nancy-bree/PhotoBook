@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Linq.Expressions;
 using System.Data;
 using System.Data.Entity;
 
@@ -22,11 +21,8 @@ namespace PhotoBook.DAL
             {
                 throw new ArgumentNullException("context");
             }
-            else
-            {
-                this._context = context;
-                this._dbSet = context.Set<T>();
-            }
+            this._context = context;
+            this._dbSet = context.Set<T>();
         }
 
         /// <summary>
@@ -51,10 +47,7 @@ namespace PhotoBook.DAL
             {
                 return orderBy(query).ToList();
             }
-            else
-            {
-                return query.ToList();
-            }
+            return query.ToList();
         }
 
         /// <summary>

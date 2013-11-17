@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using PhotoBook.Entities;
 
@@ -19,13 +18,12 @@ namespace PhotoBook.DAL
         /// <returns>Photo rating.</returns>
         public int GetPhotoRating(int photoId)
         {
-            int rating;
             var query = _context.Rating.Where(x => x.PhotoID == photoId);
-            if (query.Count() == 0)
+            if (!query.Any())
             {
                 return 0;
             }
-            rating = query.Sum(x => x.Like) - query.Sum(x => x.Dislike);
+            int rating = query.Sum(x => x.Like) - query.Sum(x => x.Dislike);
 
             return rating;
         }
@@ -38,16 +36,12 @@ namespace PhotoBook.DAL
         /// <returns></returns>
         public Rating GetRatingInfo(int photoId, int userId)
         {
-            var query = _context.Rating.Where(x => x.PhotoID == photoId && x.UserID == userId).FirstOrDefault();
+            var query = _context.Rating.FirstOrDefault(x => x.PhotoID == photoId && x.UserID == userId);
             return query;
         }
 
         public List<int> GetPopularPhotosIDs()
         {
-            /*var query2 = from x in _context.Rating
-                        where (x.Like - x.Dislike) >= 0
-                        orderby x.Like - x.Dislike descending
-                        select x.PhotoID;*/
             var query = _context.Database
                         .SqlQuery<int>("SELECT PhotoID FROM Ratings GROUP BY PhotoID ORDER BY SUM([Like] - Dislike) DESC");
             return query.ToList();

@@ -1,19 +1,16 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Web;
-using System.Web.Security;
 using System.Web.Mvc;
 using PhotoBook.Entities;
 using PhotoBook.DAL;
-using System.Data;
 using PagedList;
 using PhotoBook.Properties;
 using WebMatrix.WebData;
 using PhotoBook.Models;
 using PhotoBook.Services;
 
-namespace PhotoBook.Web.Controllers
+namespace PhotoBook.Controllers
 {
     [HandleError]
     public class PhotoBookController : Controller
@@ -52,23 +49,25 @@ namespace PhotoBook.Web.Controllers
 
         public ActionResult UserAlbum(int page = 1)
         {
-            List<AlbumViewModel> albumList = new List<AlbumViewModel>();
+            var albumList = new List<AlbumViewModel>();
             var users = unitOfWork.UserRepository.Get();
-            string cover;
             foreach (var user in users)
             {
+                string cover;
                 if (user.Photos.Count == 0)
                 {
                     cover = Settings.Default.NoCover;
                 }
                 else
                 {
-                    Random random = new Random();
+                    var random = new Random();
                     int toSkip = random.Next(0, user.Photos.Count);
                     cover = user.Photos.Skip(toSkip).Take(1).First().Filename;
                 }
-                albumList.Add(new AlbumViewModel() 
-                {ID = user.ID, Count = user.Photos.Count, Cover = cover, Username = user.UserName });
+                albumList.Add(new AlbumViewModel
+                {
+                    ID = user.ID, Count = user.Photos.Count, Cover = cover, Username = user.UserName
+                });
             }
             return View(albumList.ToPagedList(page, Settings.Default.PhotosPerPage));
         }
@@ -87,7 +86,7 @@ namespace PhotoBook.Web.Controllers
             var rating = unitOfWork.RatingRepository.GetRatingInfo(photoid, WebSecurity.CurrentUserId);
             if (rating == null)
             {
-                rating = new Rating()
+                rating = new Rating
                 {
                     PhotoID = photoid,
                     UserID = WebSecurity.CurrentUserId
@@ -109,13 +108,10 @@ namespace PhotoBook.Web.Controllers
                 {
                     return unitOfWork.RatingRepository.GetPhotoRating(photoid);
                 }
-                else
-                {
-                    if (action == "up") { rating.Like = 1; rating.Dislike = 0; }
-                    if (action == "down") { rating.Dislike = 1; rating.Like = 0; }
-                    unitOfWork.RatingRepository.Update(rating);
-                    unitOfWork.Save();
-                }
+                if (action == "up") { rating.Like = 1; rating.Dislike = 0; }
+                if (action == "down") { rating.Dislike = 1; rating.Like = 0; }
+                unitOfWork.RatingRepository.Update(rating);
+                unitOfWork.Save();
             }
             return unitOfWork.RatingRepository.GetPhotoRating(photoid);
         }

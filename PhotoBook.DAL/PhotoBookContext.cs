@@ -1,7 +1,5 @@
-﻿using System;
-using System.Data.Entity;
+﻿using System.Data.Entity;
 using PhotoBook.Entities;
-using System.Data.Entity.ModelConfiguration.Conventions;
 
 namespace PhotoBook.DAL
 {

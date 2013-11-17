@@ -1,5 +1,4 @@
-﻿using PhotoBook.Entities;
-using System;
+﻿using System;
 
 namespace PhotoBook.DAL
 {
@@ -23,50 +22,22 @@ namespace PhotoBook.DAL
         #region Properties
         public PhotoRepository PhotoRepository
         {
-            get
-            {
-                if (_photoRepository == null)
-                {
-                    _photoRepository = new PhotoRepository(_context);
-                }
-                return _photoRepository;
-            }
+            get { return _photoRepository ?? (_photoRepository = new PhotoRepository(_context)); }
         }
 
         public RatingRepository RatingRepository
         {
-            get
-            {
-                if (_ratingRepository == null)
-                {
-                    _ratingRepository = new RatingRepository(_context);
-                }
-                return _ratingRepository;
-            }
+            get { return _ratingRepository ?? (_ratingRepository = new RatingRepository(_context)); }
         }
 
         public TagRepository TagRepository
         {
-            get
-            {
-                if (_tagRepository == null)
-                {
-                    _tagRepository = new TagRepository(_context);
-                }
-                return _tagRepository;
-            }
+            get { return _tagRepository ?? (_tagRepository = new TagRepository(_context)); }
         }
 
         public UserRepository UserRepository
         {
-            get
-            {
-                if (_userRepository == null)
-                {
-                    _userRepository = new UserRepository(_context);
-                }
-                return _userRepository;
-            }
+            get { return _userRepository ?? (_userRepository = new UserRepository(_context)); }
         }
         #endregion
 

@@ -1,5 +1,5 @@
 ﻿@model PagedList.IPagedList<PhotoBook.Entities.Photo>
-@{ PhotoBook.DAL.UnitOfWork unitOfWork = new PhotoBook.DAL.UnitOfWork(); }
+@{ var unitOfWork = new PhotoBook.DAL.UnitOfWork(); }
 <div class="row">
 @{
     int index = 0;
@@ -27,7 +27,7 @@
                 }
                 else
                 {
-                    <div class="menu-gallery" data-photoid="@item.ID" data-score="@rating" data-userid="@item.UserID" >
+                    <div class="menu-gallery" data-photoid="@item.ID">
                         <div class="vote-span"><!-- voting-->
                             <div class="vote-score">@rating</div>
                         </div>
@@ -52,7 +52,6 @@
     }
 }
 </div>
-
 <script>
     $(document).ready(function () {
         $.ajaxSetup({
@@ -66,8 +65,6 @@
             var action = self.data('action');
             var parent = self.parent().parent();
             var photoid = parent.data('photoid');
-            var score = parent.data('score');
-            var userid = parent.data('userid');
 
             if (action == 'up') {
                 $.ajax({
@@ -85,7 +82,7 @@
     });
 </script>
 
-@*<script type="text/coffeescript">
+@*<script type='text/coffeescript'>
     $(document).ready ->
   $.ajaxSetup
     url: "/PhotoBook/AjaxVote"

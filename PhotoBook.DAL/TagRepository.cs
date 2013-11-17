@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using PhotoBook.Entities;
 
@@ -19,7 +18,7 @@ namespace PhotoBook.DAL
         /// <returns>Tag.</returns>
         public Tag GetTagByName(string name)
         {
-            return _context.Tag.Where(x => x.Name == name).FirstOrDefault();
+            return _context.Tag.FirstOrDefault(x => x.Name == name);
         }
 
         /// <summary>

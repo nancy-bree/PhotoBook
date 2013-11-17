@@ -1,10 +1,13 @@
-﻿/// <summary>
-/// Defines available photo effects.
-/// </summary>
-public enum Effect : int
+﻿namespace PhotoBook.Services
 {
-    None = 0,
-    Sepia = 1,
-    Grayscale = 2,
-    Autocontrast = 3,
-};
+    /// <summary>
+    /// Defines available photo effects.
+    /// </summary>
+    public enum Effect
+    {
+        None = 0,
+        Sepia = 1,
+        Grayscale = 2,
+        Autocontrast = 3,
+    };
+}

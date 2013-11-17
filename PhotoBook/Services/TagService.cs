@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Web;
-using PhotoBook.Models;
-using System.Text.RegularExpressions;
+﻿using System.Collections.Generic;
 
 namespace PhotoBook.Services
 {

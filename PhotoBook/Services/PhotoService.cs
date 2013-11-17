@@ -74,7 +74,7 @@ namespace PhotoBook.Services
             string thumbnailFilename = "_thumbnail_" + name + Path.GetExtension(file.FileName);
             string thumbnailPath = GetPhotoPath(thumbnailFilename);
 
-            WebImage img = new WebImage(file.InputStream);
+            var img = new WebImage(file.InputStream);
             float aspectRatio = (float)img.Width / (float)img.Height;
             int thumbnailHeight = Convert.ToInt32(Settings.Default.ThumbnailWidth / aspectRatio);
             img.Resize(Settings.Default.ThumbnailWidth, thumbnailHeight).Crop(1, 1);
@@ -104,10 +104,10 @@ namespace PhotoBook.Services
 
         private static string GetPhotoPath(string filename)
         {
-            return Path.Combine(HttpContext.Current.Server.MapPath(PhotoBook.Properties.Settings.Default.UserUploads), filename);
+            return Path.Combine(HttpContext.Current.Server.MapPath(Settings.Default.UserUploads), filename);
         }
 
-        private static int DeleteEffect(string filename)
+        private static void DeleteEffect(string filename)
         {
             string tmpFilename = "_tmp_" + filename;
             string tmpPath = GetPhotoPath(tmpFilename);
@@ -117,9 +117,7 @@ namespace PhotoBook.Services
             {
                 File.Move(tmpPath, sourcePath);
                 File.Delete(tmpPath);
-                return 1;
             }
-            return 0;
         }
     }
 }

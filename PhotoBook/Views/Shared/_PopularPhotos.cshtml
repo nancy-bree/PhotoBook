@@ -11,4 +11,6 @@
 </div>
 
 @{ Html.RenderPartial("~/Views/Shared/_PhotoList.cshtml", Model); }
-@Html.PagedListPager(Model, page => Url.Action("Index", new RouteValueDictionary {{"page", page }}), PagedListRenderOptions.PageNumbersOnly)
+@Html.PagedListPager(Model, 
+                    page => Url.Action("Index", "PhotoBook", new RouteValueDictionary {{"page", page }})
+                    , PagedListRenderOptions.PageNumbersOnly)

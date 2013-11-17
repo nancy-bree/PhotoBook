@@ -14,7 +14,7 @@
                   <ul class="nav navbar-nav">
                       <li>@Html.ActionLink("Albums", "UserAlbum", "PhotoBook")</li>
                       <li>@Html.ActionLink("My Photos", "Photos", "PhotoBook", 
-                                            new { id = (int)@Membership.GetUser().ProviderUserKey}, null)
+                                            new { id = @WebSecurity.CurrentUserId}, null)
                       </li>
                       <li>@Html.ActionLink("Upload", "Upload", "Photo")</li>
                   </ul>
