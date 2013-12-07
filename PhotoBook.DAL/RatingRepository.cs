@@ -23,7 +23,7 @@ namespace PhotoBook.DAL
             {
                 return 0;
             }
-            int rating = query.Sum(x => x.Like) - query.Sum(x => x.Dislike);
+            int rating = query.Sum(x => x.Vote);
 
             return rating;
         }
@@ -43,7 +43,7 @@ namespace PhotoBook.DAL
         public List<int> GetPopularPhotosIDs()
         {
             var query = _context.Database
-                        .SqlQuery<int>("SELECT PhotoID FROM Ratings GROUP BY PhotoID ORDER BY SUM([Like] - Dislike) DESC");
+                        .SqlQuery<int>("SELECT PhotoID FROM Ratings GROUP BY PhotoID ORDER BY SUM(Vote) DESC");
             return query.ToList();
         }
 

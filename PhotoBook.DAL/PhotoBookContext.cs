@@ -21,6 +21,15 @@ namespace PhotoBook.DAL
         protected override void OnModelCreating(DbModelBuilder modelBuilder)
         {
             modelBuilder.Entity<Photo>()
+                .HasMany(x => x.Votes)
+                .WithRequired(x => x.Photo);
+
+            modelBuilder.Entity<User>()
+                .HasMany(x => x.Votes)
+                .WithRequired(x => x.User)
+                .WillCascadeOnDelete(false);
+
+            modelBuilder.Entity<Photo>()
                 .Property(x => x.Effect)
                 .HasDatabaseGeneratedOption(0);
 

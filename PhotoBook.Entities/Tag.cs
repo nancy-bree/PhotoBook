@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 
 namespace PhotoBook.Entities
@@ -6,6 +7,7 @@ namespace PhotoBook.Entities
     /// <summary>
     /// Describes a Tag entity.
     /// </summary>
+    //[Serializable]
     public class Tag
     {
         [Key]

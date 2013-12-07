@@ -12,11 +12,19 @@
               @if (Request.IsAuthenticated)
               {
                   <ul class="nav navbar-nav">
-                      <li>@Html.ActionLink("Albums", "UserAlbum", "PhotoBook")</li>
-                      <li>@Html.ActionLink("My Photos", "Photos", "PhotoBook", 
-                                            new { id = @WebSecurity.CurrentUserId}, null)
-                      </li>
-                      <li>@Html.ActionLink("Upload", "Upload", "Photo")</li>
+                      @if (User.Identity.Name == "Admin")
+                      {
+                          <li>@Html.ActionLink("Users", "Users", "Admin")</li>
+                          <li>@Html.ActionLink("Tags", "Tags", "Admin")</li>
+                      }
+                      else
+                      {
+                          <li>@Html.ActionLink("Albums", "UserAlbum", "PhotoBook")</li>
+                          <li>@Html.ActionLink("My Photos", "Photos", "PhotoBook", 
+                                                new { id = @WebSecurity.CurrentUserId}, null)
+                          </li>
+                          <li>@Html.ActionLink("Upload", "Upload", "Photo")</li>
+                      }
                   </ul>
                   <ul class="nav navbar-nav navbar-right">
                     <li>

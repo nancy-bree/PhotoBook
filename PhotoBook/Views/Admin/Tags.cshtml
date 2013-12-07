@@ -1,0 +1,61 @@
+﻿@model PagedList.IPagedList<PhotoBook.Entities.Tag>
+@using PagedList.Mvc
+
+@{
+    ViewBag.Title = "Tags";
+}
+
+<div class="page-header center">
+    <h1>@ViewBag.Title</h1>
+</div>
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>Name</th>
+            <th>Photos</th>
+            <th>Action</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+        <tr>
+            <td>
+                @Html.DisplayFor(x => item.Name)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Photos.Count)
+            </td>
+            <td>
+                @Html.ActionLink("Edit", "EditTag", new { id = item.ID }) |
+                @Html.ActionLink("Delete", "DeleteTag", new { id=item.ID }, new { @class = "delete-link", @id = item.ID})
+            </td>
+        </tr>
+        }
+    </tbody>
+</table>
+
+@Html.PagedListPager(Model, page => Url.Action("Tags", new RouteValueDictionary() { { "page", page } }), PagedListRenderOptions.PageNumbersOnly)
+
+<script type="text/javascript">
+    $(document).ready(function () {
+        $('a.delete-link').click(OnDeleteClick);
+    });
+    function OnDeleteClick(e)
+    {
+        var tagId = e.target.id;
+        var flag = confirm('You are about to delete that tag permanently. Are you sure you want to delete?');
+        if (flag) {
+            $.ajax({
+                url: '/Admin/DeleteTag',
+                type: 'POST',
+                data: { id: tagId },
+                dataType: 'json',
+                success: function (result) { alert(result); $("#" + userId).parent().parent().remove(); },
+                error: function () { alert('Error!'); }
+            });
+        }
+        return false;
+    }
+</script>

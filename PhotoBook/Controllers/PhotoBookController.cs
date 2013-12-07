@@ -73,7 +73,7 @@ namespace PhotoBook.Controllers
             }
             else
             {
-                if ((rating.Like == 1 && action == "up") || (rating.Dislike == 1 && action == "down"))
+                if ((rating.Vote == 1 && action == "up") || (rating.Vote == -1 && action == "down"))
                 {
                     unitOfWork.RatingRepository.Delete(rating);
                     unitOfWork.Save();
@@ -88,6 +88,7 @@ namespace PhotoBook.Controllers
         {
             foreach (var user in users)
             {
+                if (user.UserName == "Admin") continue;
                 var cover = SetCover(user);
                 albumList.Add(new AlbumViewModel
                 {
@@ -119,13 +120,11 @@ namespace PhotoBook.Controllers
         {
             if (action == "up")
             {
-                rating.Like = 1;
-                rating.Dislike = 0;
+                rating.Vote = 1;
             }
             if (action == "down")
             {
-                rating.Dislike = 1;
-                rating.Like = 0;
+                rating.Vote = -1;
             }
             unitOfWork.RatingRepository.Update(rating);
             unitOfWork.Save();
@@ -140,11 +139,11 @@ namespace PhotoBook.Controllers
             };
             if (action == "up")
             {
-                rating.Like = 1;
+                rating.Vote = 1;
             }
             if (action == "down")
             {
-                rating.Dislike = 1;
+                rating.Vote = -1;
             }
             unitOfWork.RatingRepository.Insert(rating);
             unitOfWork.Save();

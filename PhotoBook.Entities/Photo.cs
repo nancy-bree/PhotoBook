@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 
 namespace PhotoBook.Entities
@@ -6,6 +7,7 @@ namespace PhotoBook.Entities
     /// <summary>
     /// Describes a Photo entity.
     /// </summary>
+    //[Serializable]
     public class Photo
     {
         [Key]
@@ -24,5 +26,7 @@ namespace PhotoBook.Entities
         public virtual User User { get; set; }
 
         public virtual ICollection<Tag> Tags { get; set; }
+
+        public virtual ICollection<Rating> Votes { get; set; }
     }
 }

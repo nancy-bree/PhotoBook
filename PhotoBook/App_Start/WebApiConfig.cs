@@ -14,6 +14,12 @@ namespace PhotoBook
                 routeTemplate: "api/{controller}/{id}",
                 defaults: new { id = RouteParameter.Optional }
             );
+            //config.Formatters.XmlFormatter.UseXmlSerializer = false;
+            //config.Formatters.JsonFormatter.UseDataContractJsonSerializer = true;
+            var json = config.Formatters.JsonFormatter;
+            json.SerializerSettings.PreserveReferencesHandling = Newtonsoft.Json.PreserveReferencesHandling.Objects;
+            config.Formatters.Remove(config.Formatters.XmlFormatter);
+
         }
     }
 }

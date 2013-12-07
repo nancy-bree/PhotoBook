@@ -2,6 +2,7 @@
 using System.Web.Http;
 using System.Web.Mvc;
 using System.Web.Routing;
+using StructureMap;
 using WebMatrix.WebData;
 using PhotoBook.Infrastructure;
 
@@ -29,6 +30,13 @@ namespace PhotoBook
 
             ControllerBuilder.Current.SetControllerFactory(new PhotoBookControllerFactory());
             BootStrapper.ConfigureDependencies();
+
+            var container = ObjectFactory.Container;
+            GlobalConfiguration.Configuration.DependencyResolver = new StructureMapDependencyResolver(container);
+
+            //GlobalConfiguration.Configuration.Formatters.JsonFormatter.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore;
+            //GlobalConfiguration.Configuration.Formatters.Remove(
+            //    GlobalConfiguration.Configuration.Formatters.XmlFormatter);
         }
     }
 }

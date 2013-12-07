@@ -1,0 +1,66 @@
+﻿@model PagedList.IPagedList<PhotoBook.Entities.Photo>
+@using PagedList.Mvc
+@{ var unitOfWork = new PhotoBook.DAL.UnitOfWork(); }
+@{
+    ViewBag.Title = "Photos";
+}
+
+<div class="page-header center">
+    <h1>@ViewBag.Title by @ViewBag.Author</h1>
+</div>
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>Photo</th>
+            <th>Rating</th>
+            <th>Description</th>
+            <th>Action</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+            int rating = unitOfWork.RatingRepository.GetPhotoRating(item.ID);
+        <tr>
+            <td>
+                <img src="@Url.Content(String.Concat("~/_uploads/", "_thumbnail_", item.Filename))" alt="@item.Description" />
+            </td>
+            <td>
+                @rating
+            </td>
+            <td>
+                @Html.DisplayFor(x => item.Description)
+            </td>
+            <td>
+                @Html.ActionLink("Edit", "EditPhoto", new { id = item.ID }) |
+                @Html.ActionLink("Delete", "DeletePhoto", new { id=item.ID }, new { @class = "delete-link", @id = item.ID})
+            </td>
+        </tr>
+        }
+    </tbody>
+</table>
+
+@Html.PagedListPager(Model, page => Url.Action("Photos", new RouteValueDictionary() { { "page", page } }), PagedListRenderOptions.PageNumbersOnly)
+
+<script type="text/javascript">
+    $(document).ready(function () {
+        $('a.delete-link').click(OnDeleteClick);
+    });
+    function OnDeleteClick(e)
+    {
+        var photoId = e.target.id;
+        var flag = confirm('You are about to delete that photo blog permanently. Are you sure you want to delete?');
+        if (flag) {
+            $.ajax({
+                url: '/Admin/DeletePhoto',
+                type: 'POST',
+                data: { id: photoId },
+                dataType: 'json',
+                success: function (result) { alert(result); $("#" + userId).parent().parent().remove(); },
+                error: function () { alert('Error!'); }
+            });
+        }
+        return false;
+    }
+</script>

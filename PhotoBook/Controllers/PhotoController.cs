@@ -168,7 +168,7 @@ namespace PhotoBook.Controllers
         private void DeletePhoto(int id, Photo photoToDelete)
         {
             unitOfWork.PhotoRepository.Delete(id);
-            unitOfWork.RatingRepository.DeletePhotoRating(id);
+            //unitOfWork.RatingRepository.DeletePhotoRating(id);
             unitOfWork.Save();
             string[] photos = System.IO.Directory.GetFiles(Server
                 .MapPath(Settings.Default.UserUploads), "*" + photoToDelete.Filename);

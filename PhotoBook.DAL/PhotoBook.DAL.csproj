@@ -75,6 +75,14 @@
     <Compile Include="Migrations\201311081833521_RatingTypeChanged2.Designer.cs">
       <DependentUpon>201311081833521_RatingTypeChanged2.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201312022217484_RatingTbl.cs" />
+    <Compile Include="Migrations\201312022217484_RatingTbl.Designer.cs">
+      <DependentUpon>201312022217484_RatingTbl.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201312022224142_RatingTbl2.cs" />
+    <Compile Include="Migrations\201312022224142_RatingTbl2.Designer.cs">
+      <DependentUpon>201312022224142_RatingTbl2.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="PhotoBookContext.cs" />
     <Compile Include="PhotoRepository.cs" />
@@ -113,6 +121,12 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201311081833521_RatingTypeChanged2.resx">
       <DependentUpon>201311081833521_RatingTypeChanged2.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201312022217484_RatingTbl.resx">
+      <DependentUpon>201312022217484_RatingTbl.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201312022224142_RatingTbl2.resx">
+      <DependentUpon>201312022224142_RatingTbl2.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
