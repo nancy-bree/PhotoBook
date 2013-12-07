@@ -55,35 +55,6 @@ namespace PhotoBook.Controllers
             return View(albumList.ToPagedList(page, Settings.Default.PhotosPerPage));
         }
 
-        //
-        // POST: /PhotoBook/AjaxVote
-
-        [HttpPost]
-        public int AjaxVote(int photoid, string action)
-        {
-            var photo = unitOfWork.PhotoRepository.GetByID(photoid);
-            if (photo.UserID == WebSecurity.CurrentUserId) 
-            {
-                return unitOfWork.RatingRepository.GetPhotoRating(photoid);
-            }
-            var rating = unitOfWork.RatingRepository.GetRatingInfo(photoid, WebSecurity.CurrentUserId);
-            if (rating == null)
-            {
-                AddVote(photoid, action);
-            }
-            else
-            {
-                if ((rating.Vote == 1 && action == "up") || (rating.Vote == -1 && action == "down"))
-                {
-                    unitOfWork.RatingRepository.Delete(rating);
-                    unitOfWork.Save();
-                    return unitOfWork.RatingRepository.GetPhotoRating(photoid);
-                }
-                ChangeVote(action, rating);
-            }
-            return unitOfWork.RatingRepository.GetPhotoRating(photoid);
-        }
-
         private static void FillAlbumModel(IEnumerable<User> users, List<AlbumViewModel> albumList)
         {
             foreach (var user in users)
@@ -114,39 +85,6 @@ namespace PhotoBook.Controllers
                 cover = user.Photos.Skip(toSkip).Take(1).First().Filename;
             }
             return cover;
-        }
-
-        private void ChangeVote(string action, Rating rating)
-        {
-            if (action == "up")
-            {
-                rating.Vote = 1;
-            }
-            if (action == "down")
-            {
-                rating.Vote = -1;
-            }
-            unitOfWork.RatingRepository.Update(rating);
-            unitOfWork.Save();
-        }
-
-        private void AddVote(int photoid, string action)
-        {
-            var rating = new Rating
-            {
-                PhotoID = photoid,
-                UserID = WebSecurity.CurrentUserId
-            };
-            if (action == "up")
-            {
-                rating.Vote = 1;
-            }
-            if (action == "down")
-            {
-                rating.Vote = -1;
-            }
-            unitOfWork.RatingRepository.Insert(rating);
-            unitOfWork.Save();
         }
     }
 }

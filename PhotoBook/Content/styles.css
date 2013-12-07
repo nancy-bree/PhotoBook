@@ -78,6 +78,13 @@ margin-right: auto !important;
 }
 
 /* voting style */
+.vote.like {
+    color: green;
+}
+
+.vote.dislike {
+    color: red;
+}
 .vote-span{
   margin: 5px auto;
   display: table;

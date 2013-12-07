@@ -60,5 +60,11 @@ namespace PhotoBook.DAL
                 this.Delete(item);
             }
         }
+
+        public int HasVoted(int userId, int photoId)
+        {
+            var query = _context.Rating.FirstOrDefault(x => x.UserID == userId && x.PhotoID == photoId);
+            return query == null ? 0 : query.Vote;
+        }
     }
 }

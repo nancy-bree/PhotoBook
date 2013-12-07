@@ -1,38 +1,28 @@
 ﻿@model PagedList.IPagedList<PhotoBook.Entities.Photo>
-@{ var unitOfWork = new PhotoBook.DAL.UnitOfWork(); }
-<div class="row">
-@{
-    int index = 0;
-    foreach(var item in Model)
-    {
-        int rating = unitOfWork.RatingRepository.GetPhotoRating(item.ID);
-        if (index % 3 == 0)
+<div id="photolist" data-currentuserid ="@WebSecurity.CurrentUserId"
+                    data-hasvotedurl="@Url.Action("HasVoted", "Rating")"
+                    data-votelogic="@Url.Action("AddRemoveVote", "Rating")">
+    <div class="row">
+    @{
+        int index = 0;
+        foreach(var item in Model)
         {
-            @:</div><div class="row">
-        }
-            <div class="col-md-3 gallery">
-                @if ((User.Identity.IsAuthenticated) && (item.UserID != WebSecurity.CurrentUserId))
-                {
-                    <div class="menu-gallery" data-photoid="@item.ID" data-score="@rating" data-userid="@item.UserID" >
-                        <div class="vote-span"><!-- voting-->
-                            <div class="vote" data-action="up" title="Vote up">
-                                <span class="glyphicon glyphicon-arrow-up"/>
-                            </div><!--vote up-->
-                            <div class="vote-score">@rating</div>
-                            <div class="vote" data-action="down" title="Vote down">
-                                <span class="glyphicon glyphicon-arrow-down"/>
-                            </div><!--vote down-->
-                      </div>
-                </div>
-                }
-                else
-                {
-                    <div class="menu-gallery" data-photoid="@item.ID">
-                        <div class="vote-span"><!-- voting-->
-                            <div class="vote-score">@rating</div>
-                        </div>
+            if (index % 3 == 0)
+            {
+                @:</div><div class="row">
+            }
+            <div class="col-md-3 gallery" id="@item.UserID" data-photoid="@item.ID">
+                <div class="menu-gallery">
+                    <div class="vote-span"><!-- voting-->
+                        <div class="vote up" data-action="up" title="Vote up">
+                            <span class="glyphicon glyphicon-arrow-up"/>
+                        </div><!--vote up-->
+                        <div class="vote-score" data-score="@item.Votes.Sum(x => x.Vote)">@item.Votes.Sum(x => x.Vote)</div>
+                        <div class="vote down" data-action="down" title="Vote down">
+                            <span class="glyphicon glyphicon-arrow-down"/>
+                        </div><!--vote down-->
                     </div>
-                }
+                </div>
                 <div class="image-gallery">
                     <a href="@Url.Action("Details", "Photo", new { id = item.ID})"><img src="@Url.Content(String.Concat("~/_uploads/", "_thumbnail_", item.Filename))" alt="@item.Description" /></a>
                 </div>
@@ -48,71 +38,106 @@
                     }
                 </div>
             </div>
-        index++;
+            index++;
+        }
     }
-}
+    </div>
 </div>
+
 <script>
-    $(document).ready(function () {
+    $(function () {
+        var currentUserId = $("#photolist").data("currentuserid");
+        
+        $(".gallery").each(function() {
+            var self = $(this);
+            var ownerId = self.attr("id");
+            var spanUp = self.find(".up");
+            var spanDown = self.find(".down");
+            
+            if (currentUserId == -1 || ownerId == currentUserId) {
+                spanUp.hide(); //hide arrows
+                spanDown.hide();
+            }
+            else {
+                $.ajax({
+                    type: "POST",
+                    url: $("#photolist").data("hasvotedurl"),   // 0 - no vote, 1 - arrow up, -1 - arrow down; return int
+                    data: { userId: currentUserId, photoId: self.data("photoid") },
+                    success: function (data) {
+                        if (data.result == 1) {
+                            spanUp.addClass("like");
+                            spanUp.addClass("voted");
+                        }
+                        if (data.result == -1) {
+                            spanDown.addClass("dislike");
+                            spanUp.addClass("voted");
+                        }
+                    }
+                });
+            }
+        });
+    });
+
+    $(function() {
         $.ajaxSetup({
-            url: '/PhotoBook/AjaxVote',
+            url: $("#photolist").data("votelogic"),
             type: 'POST',
             cache: 'false'
         });
 
-        $('.vote').click(function () {
+        $('.vote').click(function() {
             var self = $(this);
             var action = self.data('action');
-            var parent = self.parent().parent();
+            var currentUserId = $("#photolist").data("currentuserid");
+            var parent = self.parent().parent().parent();
             var photoid = parent.data('photoid');
-
-            if (action == 'up') {
+            var score = parent.find('.vote-score').data("score");
+            if (self.hasClass("voted")) { // if has color attribute
                 $.ajax({
-                    data: { 'photoid': photoid, 'action': 'up' },
-                    success: function (result) { parent.find('.vote-score').html(result); }
+                    data: { userId: currentUserId, photoId: photoid, action: "remove" },
+                    success: function(result) {
+                        self.removeClass("voted");
+                        if (self.hasClass("like")) {
+                            self.removeClass("like");
+                        }
+                        if (self.hasClass("dislike")) {
+                            self.removeClass("dislike");
+                        }
+                        self.parent().find('.vote-score').html(result);
+                    }
                 });
+            } else {
+                if (action == "up") {
+                    var spDown = self.parent().find(".down");
+                    if (spDown.hasClass("dislike")) {
+                        spDown.removeClass("dislike");
+                        spDown.removeClass("voted");
+                    }
+                    $.ajax({
+                        data: { userId: currentUserId, photoId: photoid, action: "up" },
+                        success: function(result) {
+                            self.addClass("like");
+                            self.addClass("voted");
+                            self.parent().find('.vote-score').html(result);
+                        }
+                    });
+                }
+                if (action == "down") {
+                    var spUp = self.parent().find(".up");
+                    if (spUp.hasClass("like")) {
+                        spUp.removeClass("like");
+                        spUp.removeClass("voted");
+                    }
+                    $.ajax({
+                        data: { userId: currentUserId, photoId: photoid, action: "down" },
+                        success: function(result) {
+                            self.addClass("dislike");
+                            self.addClass("voted");
+                            self.parent().find('.vote-score').html(result);
+                        }
+                    });
+                }
             }
-            else if (action == 'down') {
-                $.ajax({
-                    data: { 'photoid': photoid, 'action': 'down' },
-                    success: function (result) { parent.find('.vote-score').html(result); }
-                });
-            };
         });
     });
 </script>
-
-@*<script type='text/coffeescript'>
-    $(document).ready ->
-  $.ajaxSetup
-    url: "/PhotoBook/AjaxVote"
-    type: "POST"
-    cache: "false"
-
-  $(".vote").click ->
-    self = $(this)
-    action = self.data("action")
-    parent = self.parent().parent()
-    photoid = parent.data("photoid")
-    score = parent.data("score")
-    userid = parent.data("userid")
-    if action is "up"
-      $.ajax
-        data:
-          photoid: photoid
-          action: "up"
-
-        success: (result) ->
-          parent.find(".vote-score").html result
-
-    else if action is "down"
-      $.ajax
-        data:
-          photoid: photoid
-          action: "down"
-
-        success: (result) ->
-          parent.find(".vote-score").html result
-</script>*@
-
-<script src="@Url.Content("~/Scripts/coffee-script.js")"></script>
