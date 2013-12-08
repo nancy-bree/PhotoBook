@@ -1,32 +1,36 @@
 ﻿<div class="navbar navbar-inverse navbar-fixed-top">
-        <div class="container">
-          <div class="navbar-header">
+    <div class="container">
+        <div class="navbar-header">
             <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
-              <span class="icon-bar"></span>
-              <span class="icon-bar"></span>
-              <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
             </button>
             @Html.ActionLink("PhotoBook", "Index", "PhotoBook", null, new { @class = "navbar-brand"})
-          </div>
-          <div class="collapse navbar-collapse">
-              @if (Request.IsAuthenticated)
-              {
-                  <ul class="nav navbar-nav">
-                      @if (User.Identity.Name == "Admin")
-                      {
-                          <li>@Html.ActionLink("Users", "Users", "Admin")</li>
-                          <li>@Html.ActionLink("Tags", "Tags", "Admin")</li>
-                      }
-                      else
-                      {
-                          <li>@Html.ActionLink("Albums", "UserAlbum", "PhotoBook")</li>
-                          <li>@Html.ActionLink("My Photos", "Photos", "PhotoBook", 
-                                                new { id = @WebSecurity.CurrentUserId}, null)
-                          </li>
-                          <li>@Html.ActionLink("Upload", "Upload", "Photo")</li>
-                      }
-                  </ul>
-                  <ul class="nav navbar-nav navbar-right">
+        </div>
+        <div class="collapse navbar-collapse">
+            @if (Request.IsAuthenticated)
+            {
+                <ul class="nav navbar-nav">
+                    <li>@Html.ActionLink("Albums", "UserAlbum", "PhotoBook")</li>
+                    <li>@Html.ActionLink("My Photos", "Photos", "PhotoBook", 
+                            new { id = @WebSecurity.CurrentUserId}, null)
+                    </li>
+                    <li>@Html.ActionLink("Upload", "Upload", "Photo")</li>
+                    @if (User.IsInRole("Admin"))
+                    {
+                        <li class="dropdown">
+                            <a id="drop1" href="#" role="button" data-toggle="dropdown">
+                                Admin Tools<b class="caret"></b>
+                            </a>
+                            <ul class="dropdown-menu" role="menu" aria-labelledby = "drop1">
+                                <li>@Html.ActionLink("Users", "Users", "Admin")</li>
+                                <li>@Html.ActionLink("Tags", "Tags", "Admin")</li>
+                            </ul>
+                        </li>
+                    }
+                </ul>
+                <ul class="nav navbar-nav navbar-right">
                     <li>
                         <a href="@Url.Action("Manage", "Account")">
                             <span class="glyphicon glyphicon-pencil" style="font-size:12pt;"></span>
@@ -40,12 +44,12 @@
                         </a>
                     </li>
                 </ul>
-              } 
-              else 
-              {
-                  <ul class="nav navbar-nav">
-                      <li>@Html.ActionLink("Albums", "UserAlbum", "PhotoBook")</li>
-                  </ul>
+            } 
+            else 
+            {
+                <ul class="nav navbar-nav">
+                    <li>@Html.ActionLink("Albums", "UserAlbum", "PhotoBook")</li>
+                </ul>
                 <ul class="nav navbar-nav navbar-right">
                     <li>
                         <a href="@Url.Action("Register", "Account")">
@@ -61,6 +65,7 @@
                     </li>
                 </ul>
             }
-          </div><!--/.nav-collapse -->
-        </div>
+        </div><!--/.nav-collapse -->
+    </div>
 </div>
+<script src="@Url.Content("~/Scripts/dropdown.js")" type="text/javascript"></script>

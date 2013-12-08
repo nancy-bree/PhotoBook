@@ -79,7 +79,7 @@ margin-right: auto !important;
 
 /* voting style */
 .vote.like {
-    color: green;
+    color: rgb(0, 200, 0);
 }
 
 .vote.dislike {

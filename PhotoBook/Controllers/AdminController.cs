@@ -1,18 +1,20 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Data;
 using System.Linq;
 using System.Web;
 using System.Web.Mvc;
 using System.Web.Security;
 using PhotoBook.DAL;
 using PagedList;
+using PhotoBook.Entities;
 using PhotoBook.Properties;
 using WebMatrix.WebData;
 
 namespace PhotoBook.Controllers
 {
     [HandleError]
-    [Authorize(Users = "Admin")]
+    [Authorize(Roles = "Admin")]
     public class AdminController : Controller
     {
         private IUnitOfWork unitOfWork;
@@ -95,5 +97,40 @@ namespace PhotoBook.Controllers
             return Json("Tag has been deleted successfully!");
         }
 
+        public ActionResult EditTag(int id)
+        {
+            return View(unitOfWork.TagRepository.GetByID(id));
+        }
+
+        [HttpPost]
+        public ActionResult EditTag(Tag model)
+        {
+            try
+            {
+                if (ModelState.IsValid)
+                {
+                    EditATag(model);
+                    return RedirectToAction("Tags", "Admin");
+                }
+            }
+            catch (DataException)
+            {
+                ModelState.AddModelError("", "Unable to save changes. Try again.");
+            }
+            catch (Exception)
+            {
+                ModelState.AddModelError("",
+                    "Tga with the same name is already exists.");
+            }
+            return View(model);
+        }
+
+        private void EditATag(Tag model)
+        {
+            var tagToUpdate = unitOfWork.TagRepository.GetByID(model.ID);
+            tagToUpdate.Name = model.Name;
+            unitOfWork.TagRepository.Update(tagToUpdate);
+            unitOfWork.Save();
+        }
     }
 }

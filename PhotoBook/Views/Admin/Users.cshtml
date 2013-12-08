@@ -21,7 +21,6 @@
     <tbody>
         @foreach (var item in Model)
         {
-            if (item.UserName == "Admin") { continue; }
         <tr>
             <td>
                 @Html.DisplayFor(x => item.UserName)
@@ -30,7 +29,7 @@
                 @Html.DisplayFor(modelItem => item.Email)
             </td>
             <td>
-                @Html.DisplayFor(x => item.Photos.Count)
+                <b>@Html.DisplayFor(x => item.Photos.Count)</b> @Html.ActionLink("(Show photos)", "Photos", "Admin", new {id = item.ID}, null)
             </td>
             <td>
                 @Html.ActionLink("Delete", "DeleteUser", new { id=item.ID }, new { @class = "delete-link", @id = item.ID})

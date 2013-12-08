@@ -1,6 +1,5 @@
 ﻿@model PagedList.IPagedList<PhotoBook.Entities.Photo>
 @using PagedList.Mvc
-@{ var unitOfWork = new PhotoBook.DAL.UnitOfWork(); }
 @{
     ViewBag.Title = "Photos";
 }
@@ -21,19 +20,17 @@
     <tbody>
         @foreach (var item in Model)
         {
-            int rating = unitOfWork.RatingRepository.GetPhotoRating(item.ID);
         <tr>
             <td>
                 <img src="@Url.Content(String.Concat("~/_uploads/", "_thumbnail_", item.Filename))" alt="@item.Description" />
             </td>
             <td>
-                @rating
+                @item.Votes.Sum(x => x.Vote)
             </td>
             <td>
                 @Html.DisplayFor(x => item.Description)
             </td>
             <td>
-                @Html.ActionLink("Edit", "EditPhoto", new { id = item.ID }) |
                 @Html.ActionLink("Delete", "DeletePhoto", new { id=item.ID }, new { @class = "delete-link", @id = item.ID})
             </td>
         </tr>

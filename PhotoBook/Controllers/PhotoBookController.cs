@@ -59,7 +59,6 @@ namespace PhotoBook.Controllers
         {
             foreach (var user in users)
             {
-                if (user.UserName == "Admin") continue;
                 var cover = SetCover(user);
                 albumList.Add(new AlbumViewModel
                 {

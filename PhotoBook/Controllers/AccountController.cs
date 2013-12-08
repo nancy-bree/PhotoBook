@@ -85,6 +85,7 @@ namespace PhotoBook.Controllers
                 {
                     string confirmationToken =
                         WebSecurity.CreateUserAndAccount(model.UserName, model.Password, new { Email = model.Email }, true);
+                    Roles.AddUserToRole(model.UserName, "User");
                     dynamic email = new Postal.Email("RegEmail");
                     email.To = model.Email;
                     email.UserName = model.UserName;

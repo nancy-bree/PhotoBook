@@ -1,0 +1,23 @@
+﻿@model PhotoBook.Entities.Tag
+
+@{
+    ViewBag.Title = "Edit Tag";
+}
+
+<div class="page-header center">
+  <h1>@ViewBag.Title</h1>
+</div>
+
+@using (Html.BeginForm("EditTag", "Admin", FormMethod.Post, new { role = "form", @class = "col-md-6", enctype = "multipart/form-data" }))
+{
+    @Html.ValidationSummary(true)
+    @Html.AntiForgeryToken()
+    @Html.HiddenFor(m => m.ID)
+    <div class="form-group">
+        @Html.LabelFor(m => m.Name)
+        @Html.TextBoxFor(m => m.Name, new { @class = "form-control"})
+        @Html.ValidationMessageFor(m => m.Name) 
+    </div>
+    <input type="submit" value="Save" class="btn btn-primary" /> 
+    
+}
